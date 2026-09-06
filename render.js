@@ -228,9 +228,18 @@ function nowBlock(label, source) {
   return block;
 }
 
+// Whether a progression row is race day. The flag lives in the Note column, so
+// look that column up by name: reading the last cell instead means adding any
+// column after Note silently breaks both the countdown and "next long run".
+function isRaceRow(row, headers) {
+  const note = headers.indexOf('note');
+  const cell = note > -1 ? row.cells[note] : row.cells[row.cells.length - 1];
+  return /\brace\b/i.test(cell || '');
+}
+
 // Days to race day: the progression table's own row flagged RACE.
-function raceCountdown(progression) {
-  const race = progression.find(r => /\brace\b/i.test(r.cells[r.cells.length - 1]));
+function raceCountdown(progression, headers) {
+  const race = progression.find(r => isRaceRow(r, headers));
   if (!race) return null;
 
   const today = midnight(new Date());
@@ -251,7 +260,7 @@ function raceCountdown(progression) {
 // sit on Sundays, so "next" is unambiguous on every day of the week.
 function nextLongRun(progression, headers) {
   const today = midnight(new Date());
-  const next = progression.find(r => r.date >= today && !/\brace\b/i.test(r.cells[r.cells.length - 1]));
+  const next = progression.find(r => r.date >= today && !isRaceRow(r, headers));
   if (!next) return null;
 
   next.row.classList.add('is-next');
@@ -281,12 +290,14 @@ function nextLongRun(progression, headers) {
 const FAMILIES = {
   strength: ['strength', 'lift'],
   run: ['run'],
-  bike: ['bike', 'spin', 'cycling', 'ride']
+  bike: ['bike', 'spin', 'cycling', 'ride'],
+  swim: ['swim']
 };
 
 const QUALIFIERS = [
-  'upper', 'posterior', 'anterior', 'easy', 'long', 'quality',
-  'recovery', 'tempo', 'threshold', 'interval', 'sweet spot', 'vo2max', 'vo2'
+  'upper', 'posterior', 'anterior', 'easy', 'long', 'quality', 'full body',
+  'recovery', 'tempo', 'threshold', 'interval', 'sweet spot', 'vo2max', 'vo2',
+  'technique'
 ];
 
 // Prefix matching, so "run" hits "runs", "interval" hits "intervals".
@@ -415,7 +426,11 @@ function disclosure(title, meta, tag) {
 // Neither is interpreted, and the block bullet is read from the document rather
 // than a list kept here, so it re-derives itself whenever the plan is rewritten.
 function todaySession(src) {
-  const weekday = new Date().toLocaleDateString(undefined, { weekday: 'long' });
+  // Pinned to en-US, not the browser locale. The plan is written in English, so
+  // a French browser yielded "dimanche", which matched no "| Sunday |" row, no
+  // "^Sunday —" prefix and no "^Sunday" bullet — and today's session silently
+  // came up empty with nothing to indicate why.
+  const weekday = new Date().toLocaleDateString('en-US', { weekday: 'long' });
   const block = nowBlock('Today · ' + weekday, null);
   let found = false;
 
@@ -522,8 +537,9 @@ function buildNowPanel(src) {
 
   const blocks = [];
   if (progression.length) {
-    blocks.push(raceCountdown(progression));
-    blocks.push(nextLongRun(progression, tableHeaders(progressionTable)));
+    const headers = tableHeaders(progressionTable);
+    blocks.push(raceCountdown(progression, headers));
+    blocks.push(nextLongRun(progression, headers));
   }
   blocks.push(todaySession(src));
 

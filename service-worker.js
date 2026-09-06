@@ -1,4 +1,4 @@
-const CACHE = 'training-plan-v6';
+const CACHE = 'training-plan-v8';
 const ASSETS = [
   './',
   'index.html',
@@ -6,13 +6,20 @@ const ASSETS = [
   'manifest.json',
   'styles/theme.css',
   'content/plan.md',
+  'content/reference.md',
+  'content/log.md',
   'icons/icon-192.png',
   'icons/icon-512.png'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(ASSETS))
+    // Added one at a time rather than with addAll: addAll is atomic, so a
+    // single missing asset would fail the whole install and leave the app with
+    // no offline cache at all.
+    caches.open(CACHE).then(cache =>
+      Promise.all(ASSETS.map(asset => cache.add(asset).catch(() => {})))
+    )
   );
   self.skipWaiting();
 });
@@ -26,10 +33,11 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Network-first for content/plan.md so edits show up promptly; cache-first for everything else.
+// Network-first for the plan's markdown so edits show up promptly; cache-first
+// for everything else (the shell, which only changes when CACHE is bumped).
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
-  if (url.pathname.endsWith('content/plan.md')) {
+  if (/\/content\/[^/]+\.md$/.test(url.pathname)) {
     event.respondWith(
       fetch(event.request)
         .then(res => {

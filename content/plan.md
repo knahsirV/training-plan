@@ -2,186 +2,111 @@
 
 ## Athlete Snapshot
 
-- ~4.5 years of runway to the Ironman target
-- FTP 182W · Run VO2max 52 (Garmin profile) / 46–48 (recent activity estimate) · Lactate threshold HR 180bpm
-- Longest continuous run: 6.02mi (May 28, 2026, 11:01/mi)
-- Fastest verified mile: 7:59 @ avg HR 173 (Aug 23, mile 2 of a run before a brick bike leg)
-- Swim: technique work underway — see Current Block below
+- FTP 182W · Run VO2max 52 · Lactate threshold HR 180bpm
+- Garmin race predictions (Sep 6): 5K 22:36 · 10K 49:41 · Half 1:54:13
+- Longest run this year: 6.02mi (May 28) · Fastest mile: 7:59 at 173bpm
+- Garmin data starts early August 2026 — earlier training was on an Apple Watch, so trends crossing that boundary undercount
 
-## Long-Term Roadmap
+**What this block is built around: weekly running volume.** It is the strongest
+modifiable predictor of half-marathon time — weekly distance, BMI and VO2max
+together explain about 63% of the variation between runners. Above 20mi/wk with a
+long run over 13mi associates with faster finishes, and in the same data, with no
+increase in injury risk. Typical half-marathon training runs 30–40mi/wk.
 
-| Phase | Target | Timing |
-|---|---|---|
-| **Half marathon** | **Sun, Dec 13, 2026 — confirmed** | 15 wks out |
-| Marathon | Fall 2027 | full year of build |
-| Olympic triathlon | Spring/summer 2027 | fitness checkpoint, not the main goal that year |
-| First 70.3 (half Ironman) | 2028 | bike volume + bricks ramp up |
-| Second 70.3 | 2029 | dial in long-course pacing/nutrition, bike stretches toward metric-century+ |
-| **Full Ironman** | **Target Sept–Oct 2030** | leaves a safety margin before the target cutoff |
-
-**Feasibility with a 9-5 + social life:** Most of this arc runs 6–10 hrs/week — close to current volume, and the bike commute stacks aerobic volume for free. The exception is the final 3–4 months before the full Ironman (~summer 2030), which peaks at 12–20 hrs/week: early-morning swims before work, one long-ride/brick weekend day most weeks, and a lower-social-bandwidth season. 4.5 years of runway means the swim ramp-up can spread across 2027–2028 rather than being crammed.
+The previous version of this block peaked at 18.5mi/wk and never once reached 20.
+It was about 40% under-dosed for its own stated goal, because it spent its time
+budget on three bike sessions and three hour-long lifting sessions while running
+stayed at three days. This version runs four days and comes in at *less* total
+time than the plan it replaces.
 
 ---
 
 ## Current Block: Half Marathon (through Sunday, Dec 13, 2026)
 
-**Goal pace: 8:30/mi (~1:51:21 finish).** Set deliberately below demonstrated fitness (fastest mile 7:59 @ Tempo HR, not max effort) to build confidence and margin, with room to push faster if race day feels easy.
-
-This block supersedes the Foundation Phase reference plan below — bike volume drops to maintenance, run volume gets HM-specific.
-
-**What's different from the Foundation Phase during this block:**
-
-- Wednesday bike intervals → Easy Spin (Zone 2). Bike is maintenance-only, freeing recovery capacity for running.
-- Sunday long run → HM-specific progression (table below), not generic base-building.
-- Saturday Long Bike → held steady at 75–90min, not building.
-- Tuesday quality run keeps its 3-week tempo/threshold/intervals rotation; in the final 2–3 weeks it shifts toward 8:30/mi goal pace rather than all-out intervals.
-- Monday → Swim added (~30min technique-building). Previously the only full rest day.
-- Strength (Tue/Thu/Fri splits) unchanged.
-
-### Long Run Progression (miles, Zone 2 / 150–169bpm unless noted)
-
-| Week | Date | Distance | Note |
-|---|---|---|---|
-| 1 | Sep 6 | 4.0 | scheduled in Garmin |
-| 2 | Sep 13 | 4.5 | scheduled in Garmin |
-| 3 | Sep 20 | 5.0 | scheduled in Garmin |
-| 4 | Sep 27 | 4.0 | cutback week — scheduled in Garmin |
-| 5 | Oct 4 | 5.5 | scheduled in Garmin |
-| 6 | Oct 11 | 6.0 | scheduled in Garmin |
-| 7 | Oct 18 | 7.0 | scheduled in Garmin |
-| 8 | Oct 25 | 5.0 | cutback week — scheduled in Garmin |
-| 9 | Nov 1 | 7.5 | scheduled in Garmin |
-| 10 | Nov 8 | 8.5 | scheduled in Garmin |
-| 11 | Nov 15 | 9.5 | peak long run — last 1.5mi at 8:30/mi goal pace — scheduled in Garmin |
-| 12 | Nov 22 | 6.0 | taper begins — scheduled in Garmin |
-| 13 | Nov 29 | 5.0 | easy, short strides at goal pace — scheduled in Garmin |
-| 14 | Dec 6 | 3.0 | shakeout — scheduled in Garmin |
-| — | Dec 13 | 13.1 | RACE DAY — scheduled as its own workout |
-
-**Known gap:** Strength / quality-run / bike calendar entries in Garmin are populated in detail only through ~Sep 20 — the weekly template below is the source of truth beyond that, topped up week-to-week rather than all at once.
-
-**Travel note (Aug 28–31, 2026):** Out of town for the Acadia trip — turned out to be far from a rest stretch. Tuesday's Tempo run, Wednesday's Sweet Spot bike, and Thursday's Posterior Strength + Easy Run were also skipped (on top of the originally-planned Fri/Sat/Sun skips), so the entire week of set sessions went undone. In their place: 4 hikes across Sat 8/29–Sun 8/30 in Acadia, ~14.6mi total, ~4,140ft elevation gain, ~8h53min moving time (Garmin logged solid aerobic training effect on 3 of the 4 — genuinely useful aerobic volume, not lost fitness). Sleep was short/poor across four consecutive nights: 3h02m (poor, late bedtime, stressful evening) Fri→Sat; 5h19m (fair, continuous) Sat→Sun; 4h22m (poor, highly stressful day — Sunday's big two-hike day) Sun→Mon; 6h39m (fair, but stressful evening/late bedtime — travel home) Mon→Tue. Travel home was Monday 8/31.
-
-**Post-trip adjustment (Tue 9/1):** Training readiness was POOR (score 7/100) the morning of 9/1 — sleep history factor poor, ~24.9hr recovery time still flagged, elevated acute load from the hikes. Swapped Tuesday's Quality Run – Threshold for Easy Recovery Run in Garmin; kept Upper Body Strength as scheduled since it doesn't load the legs. Rest of the week (Wed easy spin, Thu posterior strength + easy run, Fri anterior strength + easy spin, Sat long bike, Sun long run Wk1, Mon swim) left as originally scheduled — by Thursday it's 4+ days past the heaviest hiking day, past the typical DOMS window, and Sunday's long run (first week of the HM progression) matters for staying on the Dec 13 timeline. Plan resumed normally otherwise — consistent with a base-phase week where overall consistency matters more than any single missed session.
-
-**After the half marathon:** Resume the Foundation Phase structure below as the base for 2027's marathon + Olympic tri year, adjusting bike/run balance once a fall marathon date is picked.
-
----
-
-## Reference: Foundation Phase (resumes after the Dec HM)
-
-Target race: Olympic distance (0.93mi swim / 24.9mi bike / 6.2mi run), earliest March 2027. 6 single-session training days/week, 1 full rest day. Phase priority: aerobic volume over intensity.
+**Goal: 8:30/mi — a 1:51:21 finish, run the whole way.** Garmin's prediction off
+today's fitness is 1:54:13, so this is about three minutes of improvement across
+a full block. Earned, not free, and not fantasy.
 
 ### Weekly Template
 
 | Day | Session |
 |---|---|
-| Monday | Rest |
-| Tuesday | Strength — Upper Body → Run (Quality: tempo/threshold/intervals) |
-| Wednesday | Bike — Intervals (Sweet Spot / VO2max, indoor) |
-| Thursday | Strength — Posterior Chain → Run (Easy, Zone 2) |
-| Friday | Strength — Anterior Chain → Bike (Easy, Zone 2, indoor) |
-| Saturday | Long Bike (outdoor if weather allows, indoor option available) |
+| Monday | Swim — Technique (easy) |
+| Tuesday | Run — Quality → Strength: Upper Body |
+| Wednesday | Bike — Easy Z2 → Strength: Anterior Chain |
+| Thursday | Run — Easy Zone 2 |
+| Friday | Bike — Easy Z2 → Strength: Posterior Chain |
+| Saturday | Run — Easy/Steady |
 | Sunday | Long Run |
 
-**Why this pairing:** Upper strength doesn't touch the legs, so Tuesday's quality run still gets fresh legs even after lifting. Posterior (deadlifts/hip hinge) and anterior (squats) days pair with easy cardio only — hard efforts on freshly-worked legs blunt both sessions and raise injury risk. Wednesday's bike intervals sit right after Tuesday's hard run since cycling's low-impact loading tolerates back-to-back hard days better than another hard run would; Thursday/Friday's easier days then absorb the fatigue before Saturday's long ride. Sunday stands alone with no strength stacked on top.
+Four runs, two easy bikes, three strength sessions, one swim. About 8 hours in
+peak week — the top of the budget, so in weeks 12 and 13 drop a bike.
 
-3 runs (quality, easy, long), 4 bike sessions (intervals, easy, long — with genuine threshold/VO2max structure), all 3 strength splits. Monday is the only full rest day — if a week feels like too much, cut Friday's easy spin first.
+**Monday's swim replaces the rest day, and only works if it stays easy.** A
+30-minute technique swim the day after a long run is non-impact and upper-body
+dominant, which makes it closer to active recovery than to a tenth session. If
+Sunday was hard or the legs are still heavy, Monday is rest — that is the
+default, not a concession.
 
-### Training Zones
+**Priority order when a week goes wrong:** Sunday long run, Tuesday quality,
+Saturday steady, Thursday easy, then the three lifts, then the swim, then the
+bikes. **Cut a bike before cutting a run.** The bikes are here for the 70.3 and
+Ironman arc, not for December — running miles are what move the half-marathon
+time.
 
-**Bike power** (FTP 182W):
+**The swim's real blocker is pool access, not the calendar.** The previous block
+scheduled a Monday swim and completed zero of them across five weeks; the record
+shows no swim at all in 90 days. Scheduling it again changes nothing on its own.
+Before week 1, settle the logistics as an actual task: which pool, which hours,
+lane availability, and what the commute costs. Until that is answered the Monday
+slot is a placeholder that will fail the same way.
 
-| Zone | % FTP | Watts |
-|---|---|---|
-| Z1 Recovery | under 55% | under 100W |
-| Z2 Endurance | 55–75% | 100–136W |
-| Z3 Tempo | 75–90% | 136–164W |
-| Z4 Threshold | 90–105% | 164–191W |
-| Z5 VO2max | 105–120% | 191–218W |
+**One swim a week builds the habit, not the stroke.** Technique is learned by
+frequency, so a single weekly session is a starting position rather than a
+destination. Once pool access has held for three or four consecutive weeks, swap
+a bike for a second swim — that is the upgrade, and it costs the running nothing.
 
-**Run heart rate** (LTHR 180bpm):
+**Why the pairings.** Endurance comes first on every shared day: lifting degrades
+running economy for up to eight hours, so the run goes first and the lift
+follows. Upper body pairs with the quality run because it never touches the legs.
+The two leg days sit Wednesday and Friday with a running day between them, and
+neither lands within eight hours before a hard run.
 
-| Zone | Range |
-|---|---|
-| Easy / Z2 | 150–169bpm |
-| Tempo | 170–178bpm |
-| Threshold | 179–184bpm |
-| Hard / VO2max | 185bpm+ |
+### Long Run Progression (miles, Easy zone 145–160bpm unless noted)
 
-Note: Garmin's threshold *pace* value is a bad reading (computes to over an hour/mile) — HR is the reliable number here, not pace.
+| Week | Date | Distance | Week total | Note |
+|---|---|---|---|---|
+| 1 | Sep 6 | 5.0 | 16.7 | |
+| 2 | Sep 13 | 6.0 | 17.7 | back to the May long-run distance |
+| 3 | Sep 20 | 6.6 | 18.3 | |
+| 4 | Sep 27 | 4.6 | 16.3 | cutback week |
+| 5 | Oct 4 | 7.2 | 18.9 | |
+| 6 | Oct 11 | 7.9 | 21.7 | goal-pace segments start in the Tuesday session |
+| 7 | Oct 18 | 8.6 | 22.4 | |
+| 8 | Oct 25 | 6.0 | 19.8 | cutback week |
+| 9 | Nov 1 | 9.4 | 23.2 | |
+| 10 | Nov 8 | 10.3 | 24.1 | finish the last 2mi at 8:30/mi |
+| 11 | Nov 15 | 7.2 | 22.9 | cutback week |
+| 12 | Nov 22 | 11.3 | 27.0 | finish the last 3mi at 8:30/mi |
+| 13 | Nov 29 | 12.4 | 28.1 | peak long run |
+| 14 | Dec 6 | 5.0 | 20.7 | shakeout — taper week |
+| — | Dec 13 | 13.1 | — | RACE DAY |
 
-### Session Details
+**Week total** is all four runs, not just the long one — it is the number that
+predicts the finish time, so it is stated rather than left to be inferred. It
+climbs from 16.7 to 28.1mi, with eight weeks at or above 20.
 
-**Tuesday — Strength: Upper Body**
-- Cable lateral raises — 2×6–8
-- Lat pulldown — 2×6–8
-- Cable/dumbbell fly — 2×6–8
-- Close grip row — 2×6–8
-- Incline machine chest press — 2×6–8
-- Dumbbell curl — 2×6–8
-- Cable extensions (triceps) — 2×6–8
-- Rear delt fly — 2×6–8
+**How the long run was set.** Weeks 1–3 rebuild toward the 6.02mi already run in
+May; re-attaining a distance the body has held is not the same as exceeding a
+lifetime maximum, so those steps are larger. From week 5 every step stays within
+about 10% of the longest run of the previous 30 days — the version of the
+ten-percent rule with evidence behind it. Cutback weeks sit near 70% and do not
+reset the anchor.
 
-**Tuesday — Run: Quality** (3-week rotation)
-- Tempo: 10min warmup (Z2) → 20–25min continuous "comfortably hard" → 10min cooldown
-- Threshold: 10min warmup → 2×15min @ 179–184bpm, 3min jog recovery → 10min cooldown
-- Intervals: 10min warmup → 5–6×3min hard (5K effort), 90sec jog recovery → 10min cooldown
+Peak is 12.4mi two weeks out, leaving a 5.6% gap to race day. If week 12 goes
+well, 13.1 is available at week 13 instead — decide it then, on the data, and
+record which was chosen in the Adjustment Log.
 
-**Wednesday — Bike: Intervals (indoor)** — mirrors Zwift workouts exactly; the Garmin entry name tells you which:
-- Sweet Spot ("Zwift: Sweet Spot Ramps - 30min"): 8min warmup ramp → 2min easy → 10min @ 155–173W → 5min recovery → 10min @ 160–173W → 5min recovery → 10min @ 160–173W → 5min cooldown ramp
-- VO2max ("Zwift: LOX"): 10min warmup ramp → 3 activation efforts → 2min easy → 5×3min @ 204–214W, 3min recovery → 10min @ 159–169W sub-threshold → 5min cooldown ramp
-
-**Thursday — Strength: Posterior Chain**
-- Box jumps — 1×9–12
-- Lat pulldown — 2×6–8
-- Standing calf raises — 2×6–8
-- Cable extensions (triceps) — 2×6–8
-- Hyperextensions (or Bulgarian split squat) — 1×12
-- T-bar row — 2×6–8
-- Romanian deadlift — 3×6–8
-
-**Thursday — Run: Easy** — 20–25min, Zone 2. Recovery jog — keep it genuinely easy given the strength load beforehand.
-
-**Friday — Strength: Anterior Chain**
-- Cable/dumbbell fly — 2×6–8
-- Goblet squat — 3×7–9
-- Preacher curl — 2×6–8
-- Kettlebell knee-ups — 2×12
-- Machine shoulder press — 2×6–8
-- Cable lateral raises — 2×6–8
-- Tibia raises — 1×9–12
-
-**Friday — Bike: Easy (indoor)** — 30–40min steady Z2 (100–136W), cadence 85–95rpm. Recovery-oriented, indoor-only.
-
-**Saturday — Long Bike**
-- Outdoor (default) when weather allows: mostly Z2 (100–136W) with occasional short Z3 surges (5–8min) once comfortable
-- Indoor option: "Long Bike – Endurance Base (Indoor)" in Garmin library, steady Z2 throughout
-- Start 75–90min either way. Build duration ~10% every 2–3 weeks
-
-**Sunday — Long Run** — Start 45–60min, all Zone 2 (150–169bpm). Build duration ~10% every 2–3 weeks.
-
-### Mobility Work
-
-Every workout ends with a targeted mobility block (visible as an extra "cooldown" segment on device):
-
-| Session | Duration | Focus |
-|---|---|---|
-| Anterior strength | 5min | Hip flexor stretch (couch stretch), quad stretch, chest opener |
-| Posterior strength | 5min | Hamstring stretch, pigeon pose (glutes), cat-cow (lower back) |
-| Upper strength | 5min | Doorway chest stretch, cross-body shoulder stretch, lat stretch |
-| Quality runs (all 3) | 5min | Calf stretch, standing quad stretch, hip flexor lunge stretch |
-| Easy run | 3min | Calf stretch, IT band (standing cross-leg lean) |
-| Long run | 5min | Calf stretch, hamstring stretch, hip flexor stretch |
-| Easy spin | 3min | Hip flexor stretch, quad stretch |
-| Long bike (both) | 5min | Hip flexor stretch, quad stretch, lower back (child's pose) |
-| Sweet Spot / VO2max bike | 5min | Hip flexor stretch, quad stretch, calf stretch |
-
-### Swim
-
-Technique work is already underway (Monday, ~30min) — started during the current HM block rather than waiting for a later phase, since it pays off across the whole roadmap. Once training returns to 7 days/week, it's worth reassessing whether another session should give ground.
-
-### Notes
-
-- With 7 months of runway to March 2027, there's no rush to add intensity everywhere at once — this phase is about building volume and consistency. A build phase (more bike intensity, longer bricks, taper) should kick in roughly 10–12 weeks out from race day.
-- If a week feels like too much, drop Friday's easy bike spin first — it's the most expendable session.
+**Known gap.** Garmin calendar entries are populated in detail only through
+~Sep 20. The weekly template above is the source of truth beyond that, topped up
+week to week.
