@@ -290,6 +290,69 @@ code {
 
 .now-adjust-text { display: block; color: var(--text); }
 
+/* --- Today's session detail (collapsed rows) --------------------------- */
+
+.today-details {
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.disclosure { border-bottom: 1px solid var(--border); }
+.disclosure:last-child { border-bottom: none; }
+
+.disclosure-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 0;
+  background: none;
+  border: none;
+  font: inherit;
+  text-align: left;
+  color: var(--text);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.disclosure-titles {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.disclosure-title {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.disclosure-tag {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.68rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-ink);
+}
+
+.disclosure-meta {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.disclosure-body {
+  padding: 0 0 12px;
+  font-size: 0.9rem;
+}
+
+.disclosure-body > *:last-child { margin-bottom: 0; }
+.disclosure-body ul { margin-bottom: 0; }
+.disclosure-body li { margin-bottom: 5px; }
+
 .now-footnote {
   margin: 12px 4px 0;
   font-size: 0.78rem;

@@ -273,6 +273,143 @@ function nextLongRun(progression, headers) {
   return block;
 }
 
+/* ---- Matching today's sessions to their details and mobility work ---- */
+
+// The mobility table is keyed by session type ("Upper strength", "Easy spin"),
+// not by weekday. Every key splits into a discipline family and a qualifier, and
+// requiring BOTH to agree is what keeps "Easy run" and "Easy spin" apart.
+const FAMILIES = {
+  strength: ['strength', 'lift'],
+  run: ['run'],
+  bike: ['bike', 'spin', 'cycling', 'ride']
+};
+
+const QUALIFIERS = [
+  'upper', 'posterior', 'anterior', 'easy', 'long', 'quality',
+  'recovery', 'tempo', 'threshold', 'interval', 'sweet spot', 'vo2max', 'vo2'
+];
+
+// Prefix matching, so "run" hits "runs", "interval" hits "intervals".
+function hasWord(text, word) {
+  return new RegExp('\\b' + word.replace(/ /g, '\\s+')).test(text.toLowerCase());
+}
+
+function familyOf(text) {
+  for (const family of Object.keys(FAMILIES)) {
+    if (FAMILIES[family].some(word => hasWord(text, word))) return family;
+  }
+  return null;
+}
+
+function qualifiersOf(text) {
+  return QUALIFIERS.filter(q => hasWord(text, q));
+}
+
+function scoreMobility(rows, family, quals) {
+  return rows
+    .map(row => {
+      if (familyOf(row.session) !== family) return null;
+      const overlap = qualifiersOf(row.session).filter(q => quals.includes(q)).length;
+      return overlap ? { row, overlap } : null;
+    })
+    .filter(Boolean);
+}
+
+// Titles are precise, so they match on their own. Only when a title yields
+// nothing ("Bike: Intervals" names no mobility row) does the session's detail
+// list get consulted — and then just the best-scoring row wins, so a stray
+// "2min easy" in an interval workout can't pull in the easy-spin block.
+function matchMobility(rows, title, listText) {
+  const family = familyOf(title);
+  if (!family) return [];
+
+  let scored = scoreMobility(rows, family, qualifiersOf(title));
+  if (!scored.length && listText) {
+    scored = scoreMobility(rows, family, qualifiersOf(title + ' ' + listText));
+    const best = Math.max(...scored.map(s => s.overlap), 0);
+    scored = scored.filter(s => s.overlap === best);
+  }
+  return scored.map(s => s.row);
+}
+
+function mobilityRows(src) {
+  const table = findTable(src, ['session', 'duration', 'focus']);
+  if (!table) return [];
+  const headers = tableHeaders(table);
+  const session = headers.indexOf('session');
+  const duration = headers.indexOf('duration');
+  const focus = headers.indexOf('focus');
+  return Array.from(table.querySelectorAll('tbody tr')).map(row => {
+    const cells = cellsOf(row);
+    return { session: cells[session] || '', duration: cells[duration] || '', focus: cells[focus] || '' };
+  }).filter(r => r.session);
+}
+
+// Session Details are paragraphs like "**Thursday — Strength: Posterior Chain**"
+// followed by the exercise list. Pair each with the list beneath it.
+function sessionDetails(src, weekday) {
+  const prefix = new RegExp('^' + weekday + '\\s*[—–-]\\s*', 'i');
+  const entries = [];
+
+  src.querySelectorAll('p:not(.callout)').forEach(p => {
+    if (!prefix.test(p.textContent.trim())) return;
+
+    const strong = p.querySelector('strong');
+    const title = (strong ? strong.textContent : p.textContent).trim().replace(prefix, '');
+
+    // Everything after the bold heading is the session's own prose.
+    const rest = p.cloneNode(true);
+    const restStrong = rest.querySelector('strong');
+    if (restStrong) restStrong.remove();
+    rest.innerHTML = rest.innerHTML.replace(/^\s*[—–-]\s*/, '').trim();
+
+    const next = p.nextElementSibling;
+    const list = next && next.tagName === 'UL' ? next : null;
+
+    entries.push({
+      title,
+      family: familyOf(title),
+      prose: rest.innerHTML ? rest : null,
+      list,
+      listText: list ? list.textContent : ''
+    });
+  });
+
+  return entries;
+}
+
+/* ---- Collapsed disclosure rows on the Today card ---- */
+
+function disclosure(title, meta, tag) {
+  const wrap = el('div', 'disclosure');
+
+  const head = el('button', 'disclosure-head');
+  head.type = 'button';
+  head.setAttribute('aria-expanded', 'false');
+
+  const titles = el('span', 'disclosure-titles');
+  titles.appendChild(el('span', 'disclosure-title', title));
+  if (tag) titles.appendChild(el('span', 'disclosure-tag', tag));
+  head.appendChild(titles);
+  if (meta) head.appendChild(el('span', 'disclosure-meta', meta));
+  head.appendChild(el('span', 'card-chevron'));
+
+  const body = el('div', 'disclosure-body');
+  body.hidden = true;
+
+  // Not persisted: an open row carried into tomorrow would be showing the
+  // wrong day's work.
+  head.addEventListener('click', () => {
+    const open = body.hidden;
+    body.hidden = !open;
+    head.setAttribute('aria-expanded', String(open));
+  });
+
+  wrap.appendChild(head);
+  wrap.appendChild(body);
+  return { wrap, body };
+}
+
 // Today's session, in two verbatim parts: the weekly template row for today's
 // weekday, and any bullet in the current block that starts with that weekday.
 // Neither is interpreted, and the block bullet is read from the document rather
@@ -311,17 +448,67 @@ function todaySession(src) {
       node = node.nextElementSibling;
     }
   }
+  // "Wednesday bike intervals → Easy Spin (Zone 2)." — the arrow separates what
+  // the template says from what the block replaces it with.
   const adjustments = Array.from(scope.querySelectorAll('li'))
     .map(li => li.textContent.trim())
-    .filter(text => new RegExp('^' + weekday + '\\b', 'i').test(text));
+    .filter(text => new RegExp('^' + weekday + '\\b', 'i').test(text))
+    .map(text => {
+      const arrow = text.indexOf('→');
+      // Only the first sentence after the arrow names the replacement session;
+      // what follows is rationale, and its stray discipline words ("freeing
+      // recovery capacity for running") would otherwise decide the match.
+      const after = arrow > -1 ? text.slice(arrow + 1).split(/[.;]/)[0].trim() : null;
+      return { text, before: arrow > -1 ? text.slice(0, arrow) : text, after: after || null };
+    });
 
-  for (const text of adjustments) {
+  for (const adjustment of adjustments) {
     const note = el('div', 'now-adjust');
     note.appendChild(el('span', 'now-adjust-tag', 'Block adjustment'));
-    note.appendChild(el('span', 'now-adjust-text', text));
+    note.appendChild(el('span', 'now-adjust-text', adjustment.text));
     block.appendChild(note);
     found = true;
   }
+
+  /* Today's session details and the mobility work that closes them out. */
+
+  const details = el('div', 'today-details');
+  const mobility = mobilityRows(src);
+  const matched = [];
+
+  sessionDetails(src, weekday).forEach(entry => {
+    // A block adjustment on this discipline replaces the template's session, so
+    // its mobility comes from what the arrow points at, not from the template.
+    const adjustment = entry.family
+      ? adjustments.find(a => a.after && familyOf(a.before) === entry.family)
+      : null;
+
+    let rows = matchMobility(mobility, entry.title, entry.listText);
+    if (adjustment) {
+      const replacement = matchMobility(mobility, adjustment.after, '');
+      if (replacement.length) rows = replacement;
+    }
+    rows.forEach(row => {
+      if (!matched.some(m => m.session === row.session)) matched.push(row);
+    });
+
+    const row = disclosure(entry.title, null, adjustment ? 'block adjustment applies' : null);
+    if (entry.prose) row.body.appendChild(entry.prose);
+    if (entry.list) row.body.appendChild(entry.list.cloneNode(true));
+    if (row.body.childNodes.length) {
+      details.appendChild(row.wrap);
+      found = true;
+    }
+  });
+
+  matched.forEach(row => {
+    const item = disclosure('Mobility · ' + row.session, row.duration, null);
+    item.body.appendChild(el('p', null, row.focus));
+    details.appendChild(item.wrap);
+    found = true;
+  });
+
+  if (details.childNodes.length) block.appendChild(details);
 
   return found ? block : null;
 }
