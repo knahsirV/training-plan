@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Training Plan</title>
-<meta name="theme-color" content="#c96442">
+<meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#191714" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="styles/theme.css">
@@ -23,9 +26,10 @@
       return r.text();
     })
     .then(md => {
-      document.getElementById('content').innerHTML = renderMarkdown(md);
+      const content = document.getElementById('content');
+      buildApp(renderMarkdown(md), content);
       document.getElementById('loading').style.display = 'none';
-      document.getElementById('content').style.display = 'block';
+      content.style.display = 'block';
     })
     .catch(() => {
       document.getElementById('loading').outerHTML =
