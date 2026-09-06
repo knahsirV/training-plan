@@ -201,7 +201,12 @@ mile). Heart rate is the reliable number here.
 
 **Saturday — Run: Easy/Steady** — 40–60min, mostly 145–160bpm with the option to drift into 161–169 when it feels good. This is the run that took the old plan's bike slot and it is where most of the added weekly volume lives.
 
-**Sunday — Long Run** — the distance in the progression table, at 145–160bpm. Run it continuously; if the heart rate will not hold in the band at that pace, slow down rather than breaking it up. From week 10 the last 2–3 miles are at 8:30/mi.
+**Sunday — Long Run** — the distance shown on the Now card, all at 145–160bpm
+- Run it continuously. If the heart rate will not hold in the band at that pace, slow down rather than breaking the run up
+- Weeks 1–9: easy throughout
+- Weeks 10–11: finish the last 2mi at 8:30/mi goal pace
+- Weeks 12–13: finish the last 3mi at 8:30/mi goal pace
+- Week 14: shakeout only — easy, short, nothing to prove
 
 ## Mobility Work
 

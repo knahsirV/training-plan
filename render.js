@@ -270,16 +270,60 @@ function nextLongRun(progression, headers) {
   const distance = headers.indexOf('distance');
   const note = headers.indexOf('note');
 
-  const block = nowBlock('Next long run', 'Long Run Progression');
+  // On the day itself "next" reads as if the run were still ahead of you.
+  const isToday = next.date.getTime() === today.getTime();
+  const total = headers.indexOf('week total');
+
+  const block = nowBlock(isToday ? "Today's long run" : 'Next long run', 'Long Run Progression');
   const parts = [];
   if (week > -1 && next.cells[week] && next.cells[week] !== '—') parts.push('Week ' + next.cells[week]);
   if (date > -1) parts.push(next.cells[date]);
+  if (total > -1 && next.cells[total] && next.cells[total] !== '—') {
+    parts.push(next.cells[total] + ' mi this week');
+  }
   const line = el('div', 'now-line');
   line.appendChild(el('span', 'now-strong', distance > -1 ? next.cells[distance] + ' mi' : '—'));
   if (parts.length) line.appendChild(el('span', 'now-dim', parts.join(' · ')));
   block.appendChild(line);
   if (note > -1 && next.cells[note]) block.appendChild(el('div', 'now-note', next.cells[note]));
   return block;
+}
+
+// Which week of the block today falls in. Long runs sit on Sundays and close
+// out the week, so the first progression row not yet past is the week you are
+// currently in — on Sunday itself, that is today's row.
+function currentBlockWeek(progression, headers) {
+  const week = headers.indexOf('week');
+  if (week < 0) return null;
+  const today = midnight(new Date());
+  const row = progression.find(r => r.date >= today && !isRaceRow(r, headers));
+  const value = row && parseInt(row.cells[week], 10);
+  return Number.isFinite(value) ? value : null;
+}
+
+// A session whose steps change by phase writes them as one bullet per phase
+// ("Weeks 6-10, build: ..."). Showing all of them puts the menu on the Now card
+// and leaves the reader to work out which line is theirs, so keep only the one
+// that covers this week. Bullets with no week prefix always survive.
+const WEEK_SCOPE = /^\s*Weeks?\s+(\d+)\s*(?:[–—-]\s*(\d+))?\s*[,:]/i;
+
+function scopedList(list, week) {
+  const clone = list.cloneNode(true);
+  if (week === null) return clone;
+
+  const items = Array.from(clone.querySelectorAll('li'));
+  const scoped = items.filter(li => WEEK_SCOPE.test(li.textContent));
+  if (!scoped.length) return clone;
+
+  scoped.forEach(li => {
+    const m = li.textContent.match(WEEK_SCOPE);
+    const from = parseInt(m[1], 10);
+    const to = m[2] ? parseInt(m[2], 10) : from;
+    if (week < from || week > to) li.remove();
+  });
+  // Never blank the list: if nothing matched, the week numbering and the
+  // document have drifted apart, and showing everything beats showing nothing.
+  return clone.querySelectorAll('li').length ? clone : list.cloneNode(true);
 }
 
 /* ---- Matching today's sessions to their details and mobility work ---- */
@@ -425,7 +469,7 @@ function disclosure(title, meta, tag) {
 // weekday, and any bullet in the current block that starts with that weekday.
 // Neither is interpreted, and the block bullet is read from the document rather
 // than a list kept here, so it re-derives itself whenever the plan is rewritten.
-function todaySession(src) {
+function todaySession(src, blockWeek) {
   // Pinned to en-US, not the browser locale. The plan is written in English, so
   // a French browser yielded "dimanche", which matched no "| Sunday |" row, no
   // "^Sunday —" prefix and no "^Sunday" bullet — and today's session silently
@@ -509,7 +553,7 @@ function todaySession(src) {
 
     const row = disclosure(entry.title, null, adjustment ? 'block adjustment applies' : null);
     if (entry.prose) row.body.appendChild(entry.prose);
-    if (entry.list) row.body.appendChild(entry.list.cloneNode(true));
+    if (entry.list) row.body.appendChild(scopedList(entry.list, blockWeek));
     if (row.body.childNodes.length) {
       details.appendChild(row.wrap);
       found = true;
@@ -536,12 +580,14 @@ function buildNowPanel(src) {
   const progression = progressionTable ? datedRows(progressionTable) : [];
 
   const blocks = [];
+  let blockWeek = null;
   if (progression.length) {
     const headers = tableHeaders(progressionTable);
+    blockWeek = currentBlockWeek(progression, headers);
     blocks.push(raceCountdown(progression, headers));
     blocks.push(nextLongRun(progression, headers));
   }
-  blocks.push(todaySession(src));
+  blocks.push(todaySession(src, blockWeek));
 
   const present = blocks.filter(Boolean);
   if (!present.length) return null;
