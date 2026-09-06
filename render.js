@@ -577,6 +577,110 @@ function openCard(card) {
   if (body.hidden) head.click();
 }
 
+/* ---- Metric lists become stat tiles ---- */
+
+// A value token: 182W, 6.02mi, 7:59, 52, ~4.5, 180bpm.
+const VALUE = /^[~<>]?\d[\d.,:–—-]*[A-Za-z%\/]*$/;
+
+const MAX_LABEL = 32;
+const MAX_CONTEXT = 90;
+
+// Splits "182W", "~4.5 years", "6.02mi (May 28…)" into the value and what trails
+// it, absorbing a bare unit word when the number doesn't carry its own.
+function leadingValue(text) {
+  const words = text.trim().split(/\s+/);
+  if (!words.length || !VALUE.test(words[0])) return null;
+
+  let value = words[0];
+  let start = 1;
+  if (!/[A-Za-z%\/]$/.test(value) && words[1] && /^[A-Za-z]{2,8}$/.test(words[1])) {
+    value += ' ' + words[1];
+    start = 2;
+  }
+  return { value, rest: words.slice(start).join(' ') };
+}
+
+function tidyContext(text) {
+  const trimmed = text.trim();
+  // Unwrap only when the parens enclose the whole thing.
+  if (trimmed.startsWith('(') && trimmed.endsWith(')') && trimmed.indexOf(')') === trimmed.length - 1) {
+    return trimmed.slice(1, -1);
+  }
+  return trimmed;
+}
+
+function asTile(label, value, context) {
+  const name = label.trim();
+  const note = tidyContext(context);
+  if (!name || name.length > MAX_LABEL || name.includes('→')) return null;
+  // An arrow means a workout sequence ("10min warmup → 2×15min → cooldown"),
+  // which is a session prescription, not a number with an annotation.
+  if (note.length > MAX_CONTEXT || note.includes('→')) return null;
+  return { label: name.charAt(0).toUpperCase() + name.slice(1), value, context: note };
+}
+
+// Three shapes qualify: "Label: 6.02mi (…)", "FTP 182W", and "~4.5 years of …".
+// Anything else — a sentence that merely contains a number — returns null and
+// stays prose, which is what keeps this off the plan's ordinary bullet lists.
+function parseMetric(text) {
+  const colon = text.indexOf(':');
+  if (colon > -1) {
+    const head = text.slice(0, colon).trim();
+    const tail = text.slice(colon + 1).trim();
+    if (!/\d/.test(head)) {
+      const lead = leadingValue(tail);
+      if (lead) return asTile(head, lead.value, lead.rest);
+      return null;
+    }
+  }
+
+  const words = text.trim().split(/\s+/);
+  const at = words.findIndex(w => VALUE.test(w));
+  if (at === -1) return null;
+
+  const lead = leadingValue(words.slice(at).join(' '));
+  if (!lead) return null;
+
+  // Number-first: the prose after the value is the label.
+  if (at === 0) {
+    const label = lead.rest.replace(/^(of|to|in)\s+/i, '');
+    return asTile(label, lead.value, '');
+  }
+  return asTile(words.slice(0, at).join(' '), lead.value, lead.rest);
+}
+
+function metricGrid(scope) {
+  scope.querySelectorAll('ul').forEach(list => {
+    const items = [];
+    Array.from(list.children).forEach(li => {
+      li.textContent.split('·').forEach(part => {
+        const text = part.trim();
+        if (text) items.push(text);
+      });
+    });
+    if (!items.length) return;
+
+    const parsed = items.map(parseMetric);
+    const tiles = parsed.filter(Boolean).length;
+    // Needs to be mostly metrics before the list is worth reshaping.
+    if (tiles < 3 || tiles / items.length < 0.6) return;
+
+    const grid = el('div', 'stats');
+    parsed.forEach((metric, index) => {
+      if (!metric) {
+        grid.appendChild(el('p', 'stat-note', items[index]));
+        return;
+      }
+      const tile = el('div', 'stat');
+      tile.appendChild(el('span', 'stat-label', metric.label));
+      tile.appendChild(el('span', 'stat-value', metric.value));
+      if (metric.context) tile.appendChild(el('span', 'stat-context', metric.context));
+      grid.appendChild(tile);
+    });
+    list.replaceWith(grid);
+  });
+}
+
 /* ---- Long callouts collapse to a few lines ---- */
 
 function clampLongCallouts(scope) {
@@ -661,7 +765,10 @@ function buildApp(html, root) {
     });
     flush();
 
-    if (intro.childNodes.length) panel.appendChild(intro);
+    if (intro.childNodes.length) {
+      metricGrid(intro);
+      panel.appendChild(intro);
+    }
 
     if (cards.length) {
       const chips = el('nav', 'chips');
