@@ -8,7 +8,10 @@ A self-hosted, installable (PWA) version of the endurance training plan, publish
 - `styles/theme.css` — all visual styling. Edit freely; content updates never touch this file.
 - `index.html` / `render.js` — the app shell that fetches and renders `content/plan.md`. Rarely changes.
 - `manifest.json` / `service-worker.js` — PWA install + offline support.
-- `icons/` — app icons (currently placeholders — swap for real ones anytime).
+- `icons/` — app icons. `icon.svg` is the source of truth for the mark; the two PNGs are
+  rasterized from it and are what `manifest.json` actually ships. Both are declared
+  `any maskable`, so the artwork stays inside the Android safe zone — keep any edit within a
+  centred circle of 80% width, or the corners get cropped on install.
 
 ## How the app is structured
 
