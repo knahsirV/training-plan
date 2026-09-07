@@ -27,6 +27,8 @@ time than the plan it replaces.
 today's fitness is 1:54:13, so this is about three minutes of improvement across
 a full block. Earned, not free, and not fantasy.
 
+- Monday swim → Long Run: Week 1 (5.0mi). Sunday's run slid a day; the swim is skipped this week rather than stacking two sessions today.
+
 ### Weekly Template
 
 | Day | Session |
