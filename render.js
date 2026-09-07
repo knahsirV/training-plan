@@ -1,15 +1,17 @@
-// Renders content/plan.md into the app shell. Two stages:
+// Renders the plan's markdown files into the app shell. Two stages:
 //
 //   renderMarkdown(md)   markdown -> HTML string (headers, bold, italic, tables,
 //                        lists, hr, paragraphs, callouts). Dependency-free so the
 //                        PWA works fully offline once cached.
-//   buildApp(html, root) HTML -> tabbed app (bottom tab bar, collapsible cards,
-//                        computed "Now" card).
+//   buildApp(parts, root) rendered parts -> tabbed app (bottom tab bar,
+//                        collapsible cards, computed "Now" card).
 //
-// Everything buildApp adds is DERIVED from the headings and tables already in
-// plan.md. Nothing is hardcoded and plan.md is never modified, so the Garmlink
-// MCP can rewrite the document freely. Anything that can't be derived is simply
-// omitted rather than shown stale.
+// One tab per content file, labelled from the file's name; the <h2> headings
+// inside a file are sections within its tab. Everything buildApp adds is still
+// DERIVED from the headings and tables already in the markdown. Nothing is
+// hardcoded and the content files are never modified, so the Garmlink MCP can
+// rewrite the document freely. Anything that can't be derived is simply omitted
+// rather than shown stale.
 
 function renderMarkdown(md) {
   const lines = md.replace(/\r\n/g, '\n').split('\n');
@@ -761,31 +763,37 @@ function clampLongCallouts(scope) {
 
 /* ---- Assembly ---- */
 
-function buildApp(html, root) {
-  const parsed = new DOMParser().parseFromString('<main id="src">' + html + '</main>', 'text/html');
+// Content sitting under no heading of its own: it stays visible, and a list
+// that reads as metrics is reshaped into stat tiles.
+function introBlock(nodes) {
+  const intro = el('div', 'panel-intro');
+  nodes.forEach(n => intro.appendChild(n));
+  metricGrid(intro);
+  return intro;
+}
+
+// Each part is one content file: { label, html }. The file is the tab; the <h2>
+// headings inside it are sections within that tab, not tabs of their own.
+function buildApp(parts, root) {
+  const source = '<main id="src">' + parts.map(part =>
+    `<div class="part" data-label="${part.label.replace(/"/g, '&quot;')}">${part.html}</div>`
+  ).join('') + '</main>';
+
+  const parsed = new DOMParser().parseFromString(source, 'text/html');
   const src = parsed.getElementById('src');
 
-  // Sections are separated by the tab bar now, so the rules between them go.
-  src.querySelectorAll(':scope > hr').forEach(hr => hr.remove());
+  // Sections are separated by the tab bar and by cards now, so the rules go.
+  src.querySelectorAll('hr').forEach(hr => hr.remove());
 
+  // The part wrappers are transparent to everything the Now panel reads: it
+  // finds tables and session paragraphs by descendant query, and its two
+  // sibling walks never needed to cross a file boundary.
   const nowPanel = buildNowPanel(src);
 
   const title = src.querySelector('h1');
   const header = el('header', 'app-header');
   header.appendChild(el('h1', null, title ? title.textContent : 'Training Plan'));
   if (title) title.remove();
-
-  // Split the flat document into one section per <h2>.
-  const sections = [];
-  let current = null;
-  Array.from(src.children).forEach(node => {
-    if (node.tagName === 'H2') {
-      current = { heading: node, nodes: [] };
-      sections.push(current);
-    } else if (current) {
-      current.nodes.push(node);
-    }
-  });
 
   const panels = el('div', 'panels');
   const tabs = [];
@@ -797,64 +805,107 @@ function buildApp(html, root) {
 
   const openCards = store.get('cards', null);
 
-  sections.forEach((section, index) => {
-    const panel = el('section', 'panel');
-    panel.id = 'panel-' + slugify(section.heading.textContent);
-    panel.appendChild(el('h2', 'panel-title', section.heading.textContent));
+  Array.from(src.children).forEach(group => {
+    const label = group.dataset.label || 'Plan';
 
-    // Content before the first <h3> is the section intro and stays visible.
-    const intro = el('div', 'panel-intro');
-    const cards = [];
-    let cardHeading = null;
-    let cardNodes = [];
-
-    const flush = () => {
-      if (!cardHeading) return;
-      cards.push({ heading: cardHeading, nodes: cardNodes });
-      cardHeading = null;
-      cardNodes = [];
-    };
-
-    section.nodes.forEach(node => {
-      if (node.tagName === 'H3') {
-        flush();
-        cardHeading = node;
-      } else if (cardHeading) {
-        cardNodes.push(node);
+    // Split the file into one section per <h2>. Anything ahead of the first one
+    // belongs to no section, so it leads the panel.
+    const sections = [];
+    const leadNodes = [];
+    let current = null;
+    Array.from(group.children).forEach(node => {
+      if (node.tagName === 'H2') {
+        current = { heading: node, nodes: [] };
+        sections.push(current);
+      } else if (current) {
+        current.nodes.push(node);
       } else {
-        intro.appendChild(node);
+        leadNodes.push(node);
       }
     });
-    flush();
 
-    if (intro.childNodes.length) {
-      metricGrid(intro);
-      panel.appendChild(intro);
-    }
+    if (!sections.length && !leadNodes.length) return;
 
-    if (cards.length) {
-      const chips = el('nav', 'chips');
-      panel.appendChild(chips);
+    const panel = el('section', 'panel');
+    panel.id = 'panel-' + slugify(label);
+    panel.appendChild(el('h2', 'panel-title', label));
 
-      cards.forEach((card, cardIndex) => {
-        const key = slugify(card.heading.textContent);
-        // Default: first card of a section open, the rest closed.
-        const open = openCards && key in openCards ? openCards[key] : cardIndex === 0;
-        const node = makeCard(card.heading, card.nodes, open);
-        panel.appendChild(node);
+    if (leadNodes.length) panel.appendChild(introBlock(leadNodes));
 
-        const chip = el('button', 'chip', card.heading.textContent);
-        chip.type = 'button';
-        chip.addEventListener('click', () => {
-          openCard(node);
-          node.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-        chips.appendChild(chip);
+    // One chip per section, so a panel holding several files' worth of sections
+    // still has an index. A lone section is its own index.
+    const chips = el('nav', 'chips');
+    if (sections.length > 1) panel.appendChild(chips);
+
+    // The first card of the panel opens; the rest stay closed unless the reader
+    // has said otherwise.
+    let cardCount = 0;
+    const openState = key => {
+      const remembered = openCards && key in openCards ? openCards[key] : null;
+      const open = remembered === null ? cardCount === 0 : remembered;
+      cardCount++;
+      return open;
+    };
+
+    sections.forEach(section => {
+      const introNodes = [];
+      const cards = [];
+      let cardHeading = null;
+      let cardNodes = [];
+
+      const flush = () => {
+        if (!cardHeading) return;
+        cards.push({ heading: cardHeading, nodes: cardNodes });
+        cardHeading = null;
+        cardNodes = [];
+      };
+
+      section.nodes.forEach(node => {
+        if (node.tagName === 'H3') {
+          flush();
+          cardHeading = node;
+        } else if (cardHeading) {
+          cardNodes.push(node);
+        } else {
+          introNodes.push(node);
+        }
       });
-    }
+      flush();
+
+      // Each section is its own block, so a label belongs visibly to the cards
+      // under it and stops at the next section. A section with <h3>s keeps them
+      // as its cards; a section without any is itself one card and needs no
+      // label, since the card title already carries the heading.
+      const wrap = el('div', 'section');
+      let firstCard;
+
+      if (cards.length) {
+        wrap.appendChild(el('h3', 'section-label', section.heading.textContent));
+        if (introNodes.length) wrap.appendChild(introBlock(introNodes));
+        cards.forEach(card => {
+          const node = makeCard(card.heading, card.nodes, openState(slugify(card.heading.textContent)));
+          wrap.appendChild(node);
+          if (!firstCard) firstCard = node;
+        });
+      } else {
+        const holder = introBlock(introNodes);
+        firstCard = makeCard(section.heading, Array.from(holder.childNodes), openState(slugify(section.heading.textContent)));
+        wrap.appendChild(firstCard);
+      }
+
+      panel.appendChild(wrap);
+
+      const chip = el('button', 'chip', tabLabel(section.heading.textContent));
+      chip.type = 'button';
+      chip.addEventListener('click', () => {
+        if (firstCard) openCard(firstCard);
+        wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      chips.appendChild(chip);
+    });
 
     panels.appendChild(panel);
-    tabs.push({ label: tabLabel(section.heading.textContent), panel, index });
+    tabs.push({ label, panel });
   });
 
   // Bottom tab bar.

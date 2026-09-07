@@ -93,6 +93,28 @@ main {
 
 .panel-intro { margin-bottom: 6px; }
 
+/* One <h2> section of a file: its own block, so the gap between sections is
+   wider than the gap between cards within one. */
+.section { margin-bottom: 20px; scroll-margin-top: 12px; }
+.section:last-child { margin-bottom: 0; }
+
+/* Names the cards under it — quiet, so it doesn't compete with a card title.
+   The hairline marks where one section ends and the next begins, so the first
+   section in a panel goes without. */
+.section-label {
+  margin: 0 0 9px;
+  font-size: 0.8rem;
+  font-weight: 650;
+  line-height: 1.4;
+  color: var(--text-faint);
+  letter-spacing: 0.005em;
+}
+
+.section + .section > .section-label {
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
 /* --- Stat tiles -------------------------------------------------------- */
 
 .stats {
@@ -557,8 +579,6 @@ tbody tr.is-race td {
   z-index: 10;
   display: flex;
   gap: 2px;
-  overflow-x: auto;
-  scrollbar-width: none;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 4px env(safe-area-inset-bottom);
@@ -567,7 +587,6 @@ tbody tr.is-race td {
   backdrop-filter: saturate(180%) blur(14px);
   border-top: 1px solid var(--border);
 }
-.tabbar::-webkit-scrollbar { display: none; }
 
 @supports not (background: color-mix(in srgb, red 50%, transparent)) {
   .tabbar { background: var(--surface); }
@@ -575,7 +594,6 @@ tbody tr.is-race td {
 
 .tab {
   flex: 1 1 0;
-  min-width: 68px;
   height: var(--tabbar-height);
   display: flex;
   align-items: center;
@@ -591,11 +609,12 @@ tbody tr.is-race td {
 }
 
 .tab-label {
-  font-size: 0.7rem;
+  font-size: 0.76rem;
   font-weight: 600;
   line-height: 1.2;
   text-align: center;
   letter-spacing: -0.005em;
+  white-space: nowrap;
 }
 
 .tab.is-active {
@@ -618,5 +637,5 @@ tbody tr.is-race td {
 @media (min-width: 700px) {
   body { font-size: 16.5px; }
   .app-header h1 { font-size: 1.7rem; }
-  .tab-label { font-size: 0.78rem; }
+  .tab-label { font-size: 0.83rem; }
 }
