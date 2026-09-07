@@ -1,0 +1,9 @@
+{
+  "name": "training-plan",
+  "private": true,
+  "type": "module",
+  "description": "Static PWA. No dependencies and no build step — marked is vendored in vendor/. This file exists so node --test treats src/ as ES modules.",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}
