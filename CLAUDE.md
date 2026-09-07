@@ -63,6 +63,21 @@ Load-bearing shapes, all of which fail silently:
   Strength: Upper Body`). The colour comes from what precedes the arrow, so the
   primary work has to be written first.
 
+**How a table gets rendered is measured, not named.** `reshapeTables()` sizes
+every column by its widest cell and picks one of two treatments — no table is
+listed in `render.js`, so a new one is shaped correctly for free:
+
+| Column shape | Rendered as |
+|---|---|
+| Two or more columns ≤16 chars, and they outnumber the longer ones | A table. Any long column drops to a full-width line beneath its own row. |
+| Anything else | A record list — one block per row, first column as its title, one other short column top-right, the rest as labelled blocks. |
+
+Today, that makes the zones tables plain tables, the long-run progression a
+table with its `Note` beneath each week, and the weekly template, roadmap,
+mobility and adjustment log record lists. Widening a column past 16 characters
+can flip a table to a record list, which is the intent — a column of sentences
+has nothing to align.
+
 **No personal data** — public repo. No birth date, age, height, or body weight.
 FTP, VO2max, threshold HR and zones are fine.
 

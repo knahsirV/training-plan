@@ -808,6 +808,114 @@ tbody tr.is-race td {
   color: var(--accent);
 }
 
+/* --- Records ------------------------------------------------------------
+   A table whose columns are sentences has nothing to align, so render.js gives
+   it this instead: one block per row, titled by its first column. */
+
+.records {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 14px 0 16px;
+}
+
+.record {
+  padding: 13px 15px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+
+/* Inside an open card the surface is already raised, so drop back to the page
+   ground for contrast — same trick .table-wrap uses. */
+.card-body .record { background: var(--bg); }
+
+.record-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.record-title {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  color: var(--text);
+}
+
+.record-meta {
+  flex: 0 0 auto;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  text-align: right;
+  color: var(--text-faint);
+}
+
+.record-field { margin-top: 11px; }
+.record-head + .record-field { margin-top: 8px; }
+
+.record-label {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--text-faint);
+}
+
+.record-value {
+  display: block;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* Row state the Now tab set before the reshape — today's template row, the
+   current progression week — has to land somewhere once the <tr> is gone. */
+.record.is-today,
+.record.is-next {
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.card-body .record.is-today,
+.card-body .record.is-next { background: var(--accent-soft); }
+
+.record.is-race .record-title { color: var(--accent); }
+
+/* --- Prose dropped beneath its own row ---------------------------------- */
+
+/* The number row and its note are one entry, so the rule between them goes. */
+tr.has-note td {
+  border-bottom: none;
+  padding-bottom: 5px;
+}
+
+tr.row-note td {
+  padding: 0 13px 11px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.row-note-label {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--text-faint);
+}
+
+.row-note-body { display: block; }
+.row-note-body + .row-note-label { margin-top: 8px; }
+
 /* --- Bottom tab bar ---------------------------------------------------- */
 
 .tabbar {

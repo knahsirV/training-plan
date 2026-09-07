@@ -969,6 +969,162 @@ function clampLongCallouts(scope) {
   });
 }
 
+/* ---- Tables that aren't tabular ---- */
+
+// Markdown gives every table the same grid, but half of these aren't tabular: a
+// column of 300-character sentences has nothing to line up with the sentence
+// below it, and on a phone it becomes a ribbon four words wide. Which treatment
+// a table gets is MEASURED, not named — no table is listed anywhere here, so a
+// new one in the plan is shaped correctly without touching this file.
+
+// A column is narrow when its widest cell still reads on a phone. Past this, a
+// cell is prose.
+const NARROW_CELL = 16;
+
+function columnWidths(headers, rows) {
+  return headers.map((th, i) => rows.reduce(
+    (max, row) => Math.max(max, row.children[i] ? row.children[i].textContent.trim().length : 0),
+    th.textContent.trim().length
+  ));
+}
+
+// A grid earns its keep when most of its columns are short enough to align.
+// Two is the fewest worth aligning, and they have to outnumber the prose ones —
+// below that the table is a record list wearing a grid.
+function tableShape(table) {
+  const headers = Array.from(table.querySelectorAll('thead th'));
+  const rows = Array.from(table.querySelectorAll('tbody tr'));
+  const narrow = columnWidths(headers, rows).map(w => w <= NARROW_CELL);
+  const narrowCount = narrow.filter(Boolean).length;
+  return {
+    headers, rows, narrow,
+    keepGrid: narrowCount >= 2 && narrowCount > narrow.length - narrowCount
+  };
+}
+
+// Cells hold rendered markdown — bold, code — so they move as nodes. Reading
+// textContent and writing it back would flatten the formatting.
+function moveChildren(from, to) {
+  while (from.firstChild) to.appendChild(from.firstChild);
+}
+
+// A row's state is set by the Now tab before any of this runs, and it has to
+// survive the reshape or today's highlight lands on nothing.
+function carryState(from, to) {
+  Array.from(from.classList).forEach(name => to.classList.add(name));
+}
+
+// The grid stays and each prose column drops to a full-width row beneath its
+// own. The numbers keep lining up; the sentence gets the whole width.
+function dropProseRows(shape) {
+  const wide = [];
+  shape.narrow.forEach((isNarrow, i) => { if (!isNarrow) wide.push(i); });
+  if (!wide.length) return;
+
+  const span = shape.narrow.filter(Boolean).length;
+  const labelled = wide.length > 1;
+
+  shape.rows.forEach(row => {
+    const cells = Array.from(row.children);
+    const notes = [];
+    wide.forEach(i => {
+      const cell = cells[i];
+      if (!cell) return;
+      if (cell.textContent.trim()) notes.push({ cell: cell, head: shape.headers[i] });
+      cell.remove();
+    });
+    if (!notes.length) return;
+
+    const note = el('tr', 'row-note');
+    carryState(row, note);
+    const td = el('td');
+    td.colSpan = span;
+    notes.forEach(entry => {
+      if (labelled && entry.head) {
+        td.appendChild(el('span', 'row-note-label', entry.head.textContent.trim()));
+      }
+      const body = el('span', 'row-note-body');
+      moveChildren(entry.cell, body);
+      td.appendChild(body);
+    });
+    note.appendChild(td);
+    row.after(note);
+    // The pair reads as one entry, so the rule between them goes.
+    row.classList.add('has-note');
+  });
+
+  wide.forEach(i => { if (shape.headers[i]) shape.headers[i].remove(); });
+}
+
+// No useful alignment left, so the grid goes. One card per row: the first column
+// names it, one other short column rides alongside as its meta, and everything
+// else becomes a labelled block with the full width to itself.
+function recordList(shape) {
+  const metaCandidates = [];
+  shape.narrow.forEach((isNarrow, i) => { if (isNarrow && i > 0) metaCandidates.push(i); });
+  const metaCol = metaCandidates.length === 1 ? metaCandidates[0] : -1;
+  // With a single field the column's name adds nothing the title hasn't said —
+  // "Monday / Session: Swim" is a label earning its keep nowhere.
+  const fields = shape.headers.length - 1 - (metaCol > -1 ? 1 : 0);
+
+  const list = el('div', 'records');
+  shape.rows.forEach(row => {
+    const cells = Array.from(row.children);
+    if (!cells.length) return;
+
+    const record = el('div', 'record');
+    carryState(row, record);
+
+    const head = el('div', 'record-head');
+    const title = el('span', 'record-title');
+    moveChildren(cells[0], title);
+    head.appendChild(title);
+    if (metaCol > -1 && cells[metaCol] && cells[metaCol].textContent.trim()) {
+      const meta = el('span', 'record-meta');
+      moveChildren(cells[metaCol], meta);
+      head.appendChild(meta);
+    }
+    record.appendChild(head);
+
+    cells.forEach((cell, i) => {
+      if (i === 0 || i === metaCol) return;
+      const text = cell.textContent.trim();
+      if (!text || text === '—') return;
+      const field = el('div', 'record-field');
+      if (fields > 1 && shape.headers[i]) {
+        field.appendChild(el('span', 'record-label', shape.headers[i].textContent.trim()));
+      }
+      const value = el('span', 'record-value');
+      moveChildren(cell, value);
+      field.appendChild(value);
+      record.appendChild(field);
+    });
+
+    list.appendChild(record);
+  });
+
+  return list.childNodes.length ? list : null;
+}
+
+// Runs AFTER buildNowPanel — that reads tables by column name and tags rows on
+// them, so nothing here may move until it has finished.
+function reshapeTables(scope) {
+  scope.querySelectorAll('table').forEach(table => {
+    const shape = tableShape(table);
+    if (!shape.headers.length || !shape.rows.length) return;
+
+    if (shape.keepGrid) {
+      dropProseRows(shape);
+      return;
+    }
+
+    const list = recordList(shape);
+    if (!list) return;
+    const wrap = table.closest('.table-wrap');
+    (wrap || table).replaceWith(list);
+  });
+}
+
 /* ---- Bottom tab bar ---- */
 
 // Inline so the bar draws with the shell and never waits on the network. Keyed
@@ -1018,6 +1174,10 @@ function buildApp(parts, root) {
   // finds tables and session paragraphs by descendant query, and its two
   // sibling walks never needed to cross a file boundary.
   const nowPanel = buildNowPanel(src);
+
+  // Safe only now: the Now tab has read every table it needs and tagged its
+  // rows, so the tables are free to become what their content actually is.
+  reshapeTables(src);
 
   const title = src.querySelector('h1');
   const header = el('header', 'app-header');
