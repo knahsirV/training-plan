@@ -1,4 +1,9 @@
-const CACHE = 'training-plan-v11';
+const CACHE = 'training-plan-v12';
+
+// Third-party, so their exact URLs aren't known at install time — see the fetch
+// handler, which caches them the first time they are asked for.
+const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
+
 const ASSETS = [
   './',
   'index.html',
@@ -49,6 +54,24 @@ self.addEventListener('fetch', event => {
     );
     return;
   }
+
+  // The font origins can't be pre-cached at install: the stylesheet decides
+  // which woff2 files to ask for, and it is itself fetched over the network. So
+  // cache both the first time they are seen — after one online load the
+  // installed app renders in its real faces offline instead of the fallbacks.
+  if (FONT_HOSTS.indexOf(url.hostname) > -1) {
+    event.respondWith(
+      caches.match(event.request).then(cached => cached || fetch(event.request).then(res => {
+        if (res.ok) {
+          const clone = res.clone();
+          caches.open(CACHE).then(cache => cache.put(event.request, clone));
+        }
+        return res;
+      }))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(cached => cached || fetch(event.request))
   );

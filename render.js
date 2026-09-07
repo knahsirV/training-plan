@@ -239,30 +239,194 @@ function isRaceRow(row, headers) {
   return /\brace\b/i.test(cell || '');
 }
 
-// Days to race day: the progression table's own row flagged RACE.
-function raceCountdown(progression, headers) {
-  const race = progression.find(r => isRaceRow(r, headers));
-  if (!race) return null;
+// The progression row for the week the plan is currently in. Long runs sit on
+// Sundays and close out the week, so the first row not yet past is this week —
+// on Sunday itself, that is today's row. The rings, the volume card and "next
+// long run" all read it, so they cannot disagree about which week it is.
+function currentRow(progression, headers) {
+  const today = midnight(new Date());
+  return progression.find(r => r.date >= today && !isRaceRow(r, headers)) || null;
+}
+
+/* ---- Score rings ---- */
+
+const RING_R = 46;
+const RING_C = 2 * Math.PI * RING_R;
+
+// One donut: a track and an arc whose length comes from stroke-dasharray off
+// the circumference. The SVG string carries only numbers computed right here;
+// every string taken from the document goes in as a text node.
+function ring(spec) {
+  const card = el('div', 'ring-card');
+  if (spec.family) card.dataset.family = spec.family;
+
+  const fraction = Number.isFinite(spec.fraction) ? Math.max(0, Math.min(1, spec.fraction)) : 0;
+  const wrap = el('div', 'ring');
+  wrap.innerHTML =
+    '<svg class="ring-svg" viewBox="0 0 112 112" aria-hidden="true">' +
+      '<circle class="ring-track" cx="56" cy="56" r="' + RING_R + '"/>' +
+      '<circle class="ring-arc" cx="56" cy="56" r="' + RING_R + '" ' +
+        'stroke-dasharray="' + RING_C.toFixed(2) + '" ' +
+        'stroke-dashoffset="' + (RING_C * (1 - fraction)).toFixed(2) + '"/>' +
+    '</svg>';
+
+  const center = el('div', 'ring-center');
+  center.appendChild(el('span', 'ring-value', spec.value));
+  if (spec.unit) center.appendChild(el('span', 'ring-unit', spec.unit));
+  wrap.appendChild(center);
+
+  card.appendChild(wrap);
+  card.appendChild(el('div', 'ring-label', spec.label));
+  if (spec.sub) card.appendChild(el('div', 'ring-sub', spec.sub));
+  return card;
+}
+
+// Two rings: how long until race day, and where in the block today sits. The
+// countdown's arc fills across the whole block, so a nearly empty ring is week
+// one and a nearly full one is taper. Either ring is dropped on its own if the
+// column behind it is missing.
+function nowRings(progression, headers) {
+  if (!progression.length) return null;
 
   const today = midnight(new Date());
-  const days = Math.round((race.date - today) / DAY);
-  race.row.classList.add('is-race');
-  if (days < 0) return null;
+  const race = progression.find(r => isRaceRow(r, headers));
+  if (race) race.row.classList.add('is-race');
 
-  const block = el('div', 'now-hero');
-  block.appendChild(el('div', 'now-count', days === 0 ? 'Race day' : String(days)));
-  block.appendChild(el('div', 'now-count-label', days === 0 ? 'Good luck' : (days === 1 ? 'day to race' : 'days to race')));
-  block.appendChild(el('div', 'now-race-date', race.date.toLocaleDateString(undefined, {
-    weekday: 'short', month: 'short', day: 'numeric'
-  })));
-  return block;
+  const grid = el('div', 'ring-grid');
+
+  if (race) {
+    const days = Math.round((race.date - today) / DAY);
+    if (days >= 0) {
+      const start = progression[0].date;
+      const span = (race.date - start) / DAY;
+      grid.appendChild(ring({
+        value: days === 0 ? 'Race' : String(days),
+        unit: days === 0 ? null : (days === 1 ? 'day' : 'days'),
+        label: days === 0 ? 'Race day' : 'To race',
+        sub: race.date.toLocaleDateString(undefined, {
+          weekday: 'short', month: 'short', day: 'numeric'
+        }),
+        fraction: span > 0 ? (today - start) / DAY / span : 1,
+        family: 'run'
+      }));
+    }
+  }
+
+  const weekCol = headers.indexOf('week');
+  const noteCol = headers.indexOf('note');
+  const row = currentRow(progression, headers);
+  const week = row && weekCol > -1 ? parseInt(row.cells[weekCol], 10) : NaN;
+  const weeks = weekCol > -1
+    ? progression.map(r => parseInt(r.cells[weekCol], 10)).filter(Number.isFinite)
+    : [];
+
+  if (Number.isFinite(week) && weeks.length) {
+    const total = Math.max.apply(null, weeks);
+    // The Note column already says "cutback week" or "peak long run" when the
+    // week has a character worth naming. Anything longer is a sentence.
+    const note = (noteCol > -1 && row.cells[noteCol] ? row.cells[noteCol] : '').trim();
+    grid.appendChild(ring({
+      value: String(week),
+      unit: 'of ' + total,
+      label: 'Block week',
+      sub: note && note.length <= 28 ? note : null,
+      fraction: total > 0 ? week / total : 0
+    }));
+  }
+
+  return grid.childNodes.length ? grid : null;
+}
+
+// This week's mileage against the biggest week of the block, plus one bar per
+// week so the whole build reads at a glance. Prefers Week total — the number
+// that predicts the finish — and falls back to the long run when it is absent.
+function volumeCard(progression, headers) {
+  const weekTotal = headers.indexOf('week total');
+  const col = weekTotal > -1 ? weekTotal : headers.indexOf('distance');
+  if (col < 0) return null;
+
+  const series = progression.map(r => ({ row: r, value: parseFloat(r.cells[col]) }));
+  const values = series.map(s => s.value).filter(Number.isFinite);
+  if (!values.length) return null;
+  const peak = Math.max.apply(null, values);
+  if (!(peak > 0)) return null;
+
+  const current = currentRow(progression, headers);
+  const value = current ? parseFloat(current.cells[col]) : NaN;
+
+  const card = el('div', 'now-card');
+  const block = el('div', 'now-block');
+  block.appendChild(el('div', 'now-label', weekTotal > -1 ? 'This week' : 'Long run'));
+
+  const head = el('div', 'volume-head');
+  head.appendChild(el('span', 'volume-value', Number.isFinite(value) ? value + ' mi' : '—'));
+  head.appendChild(el('span', 'volume-context', 'of ' + peak + ' mi peak'));
+  block.appendChild(head);
+
+  const track = el('div', 'bar-track');
+  const fill = el('div', 'bar-fill');
+  const filled = Number.isFinite(value) ? Math.max(0, Math.min(1, value / peak)) : 0;
+  fill.style.width = (filled * 100).toFixed(1) + '%';
+  track.appendChild(fill);
+  block.appendChild(track);
+
+  // A floor on the bar height so the lightest week is still a mark rather than
+  // a gap in the row.
+  const bars = el('div', 'sparkbars');
+  series.forEach(s => {
+    if (!Number.isFinite(s.value)) return;
+    const bar = el('div', 'sparkbar');
+    bar.style.height = Math.max(8, (s.value / peak) * 100).toFixed(1) + '%';
+    if (current && s.row === current) bar.classList.add('is-now');
+    bars.appendChild(bar);
+  });
+  if (bars.childNodes.length > 2) block.appendChild(bars);
+
+  card.appendChild(block);
+  return card;
+}
+
+/* ---- The week at a glance ---- */
+
+// One cell per row of the weekly template, coloured by the session's discipline
+// and marking today. A day pairing two sessions ("Run — Quality → Strength")
+// takes its colour from the first: the arrow separates the primary work from
+// what follows it.
+function weekdayStrip(src) {
+  const table = findTable(src, ['day', 'session']);
+  if (!table) return null;
+
+  const headers = tableHeaders(table);
+  const dayCol = headers.indexOf('day');
+  const sessionCol = headers.indexOf('session');
+  // Pinned to en-US for the same reason todaySession() is — see the note there.
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+
+  const strip = el('div', 'day-strip');
+  Array.from(table.querySelectorAll('tbody tr')).forEach(row => {
+    const cells = cellsOf(row);
+    const day = cells[dayCol] || '';
+    if (!day) return;
+
+    const session = cells[sessionCol] || '';
+    const cell = el('div', 'day');
+    const family = familyOf(session.split('→')[0]);
+    if (family) cell.dataset.family = family;
+    if (day.toLowerCase() === today.toLowerCase()) cell.classList.add('is-today');
+    cell.title = session ? day + ' · ' + session : day;
+    cell.appendChild(el('span', 'day-letter', day.charAt(0).toUpperCase()));
+    cell.appendChild(el('span', 'day-dot'));
+    strip.appendChild(cell);
+  });
+
+  return strip.childNodes.length ? strip : null;
 }
 
 // The next long run is the first dated row that hasn't happened yet. Long runs
 // sit on Sundays, so "next" is unambiguous on every day of the week.
 function nextLongRun(progression, headers) {
   const today = midnight(new Date());
-  const next = progression.find(r => r.date >= today && !isRaceRow(r, headers));
+  const next = currentRow(progression, headers);
   if (!next) return null;
 
   next.row.classList.add('is-next');
@@ -291,14 +455,12 @@ function nextLongRun(progression, headers) {
   return block;
 }
 
-// Which week of the block today falls in. Long runs sit on Sundays and close
-// out the week, so the first progression row not yet past is the week you are
-// currently in — on Sunday itself, that is today's row.
+// Which week of the block today falls in, as a number, for scoping the session
+// bullets below.
 function currentBlockWeek(progression, headers) {
   const week = headers.indexOf('week');
   if (week < 0) return null;
-  const today = midnight(new Date());
-  const row = progression.find(r => r.date >= today && !isRaceRow(r, headers));
+  const row = currentRow(progression, headers);
   const value = row && parseInt(row.cells[week], 10);
   return Number.isFinite(value) ? value : null;
 }
@@ -437,8 +599,9 @@ function sessionDetails(src, weekday) {
 
 /* ---- Collapsed disclosure rows on the Today card ---- */
 
-function disclosure(title, meta, tag) {
+function disclosure(title, meta, tag, family) {
   const wrap = el('div', 'disclosure');
+  if (family) wrap.dataset.family = family;
 
   const head = el('button', 'disclosure-head');
   head.type = 'button';
@@ -489,8 +652,14 @@ function todaySession(src, blockWeek) {
       .find(r => (cellsOf(r)[dayCol] || '').toLowerCase() === weekday.toLowerCase());
     if (row) {
       row.classList.add('is-today');
+      const session = cellsOf(row)[sessionCol] || '';
+      // The card wears today's discipline on its top edge. A day pairing two
+      // sessions takes the first — the arrow separates the primary work from
+      // what follows it.
+      const family = familyOf(session.split('→')[0]);
+      if (family) block.dataset.family = family;
       const line = el('div', 'now-line');
-      line.appendChild(el('span', 'now-strong', cellsOf(row)[sessionCol] || '—'));
+      line.appendChild(el('span', 'now-strong', session || '—'));
       block.appendChild(line);
       block.appendChild(el('div', 'now-source-line', 'Weekly Template'));
       found = true;
@@ -553,7 +722,7 @@ function todaySession(src, blockWeek) {
       if (!matched.some(m => m.session === row.session)) matched.push(row);
     });
 
-    const row = disclosure(entry.title, null, adjustment ? 'block adjustment applies' : null);
+    const row = disclosure(entry.title, null, adjustment ? 'block adjustment applies' : null, entry.family);
     if (entry.prose) row.body.appendChild(entry.prose);
     if (entry.list) row.body.appendChild(scopedList(entry.list, blockWeek));
     if (row.body.childNodes.length) {
@@ -563,7 +732,7 @@ function todaySession(src, blockWeek) {
   });
 
   matched.forEach(row => {
-    const item = disclosure('Mobility · ' + row.session, row.duration, null);
+    const item = disclosure('Mobility · ' + row.session, row.duration, null, familyOf(row.session));
     item.body.appendChild(el('p', null, row.focus));
     details.appendChild(item.wrap);
     found = true;
@@ -574,6 +743,22 @@ function todaySession(src, blockWeek) {
   return found ? block : null;
 }
 
+// A block becomes a card of its own, carrying up any discipline it tagged so
+// the card can wear the hue along its top edge.
+function nowCard(block) {
+  if (!block) return null;
+  const card = el('div', 'now-card');
+  if (block.dataset.family) {
+    card.dataset.family = block.dataset.family;
+    delete block.dataset.family;
+  }
+  card.appendChild(block);
+  return card;
+}
+
+// The panel is a stack of dashboard tiles, every one of which returns null when
+// the table behind it is missing or renamed. Nothing here is required: the panel
+// itself disappears only when every tile does.
 function buildNowPanel(src) {
   const panel = el('section', 'panel');
   panel.id = 'panel-now';
@@ -581,22 +766,21 @@ function buildNowPanel(src) {
   const progressionTable = findTable(src, ['week', 'date', 'distance']);
   const progression = progressionTable ? datedRows(progressionTable) : [];
 
-  const blocks = [];
+  const tiles = [weekdayStrip(src)];
   let blockWeek = null;
   if (progression.length) {
     const headers = tableHeaders(progressionTable);
     blockWeek = currentBlockWeek(progression, headers);
-    blocks.push(raceCountdown(progression, headers));
-    blocks.push(nextLongRun(progression, headers));
+    tiles.push(nowRings(progression, headers));
+    tiles.push(volumeCard(progression, headers));
+    tiles.push(nowCard(nextLongRun(progression, headers)));
   }
-  blocks.push(todaySession(src, blockWeek));
+  tiles.push(nowCard(todaySession(src, blockWeek)));
 
-  const present = blocks.filter(Boolean);
+  const present = tiles.filter(Boolean);
   if (!present.length) return null;
 
-  const card = el('div', 'now-card');
-  present.forEach(b => card.appendChild(b));
-  panel.appendChild(card);
+  present.forEach(tile => panel.appendChild(tile));
   panel.appendChild(el('p', 'now-footnote',
     'Read from the plan below — the plan itself is always the source of truth.'));
   return panel;
@@ -785,6 +969,27 @@ function clampLongCallouts(scope) {
   });
 }
 
+/* ---- Bottom tab bar ---- */
+
+// Inline so the bar draws with the shell and never waits on the network. Keyed
+// by the tab's own label, with a fallback mark — a new content/*.md still gets a
+// tab, it just gets the generic icon until one is added here.
+const TAB_ICONS = {
+  now: '<circle cx="11" cy="11" r="8.2"/><circle cx="11" cy="11" r="3"/>',
+  plan: '<rect x="3" y="4.5" width="16" height="14.5" rx="3.5"/>' +
+        '<path d="M3 9.5h16M7.5 2.5v4M14.5 2.5v4"/>',
+  reference: '<path d="M3.8 5A2.5 2.5 0 0 1 6.3 2.5H18v14.2H6.3A2.5 2.5 0 0 0 3.8 19.2z"/>' +
+             '<path d="M3.8 5v14.2"/>',
+  log: '<path d="M4 6h14M4 11h14M4 16h9"/>'
+};
+
+function tabIcon(label) {
+  const icon = el('span', 'tab-icon');
+  icon.innerHTML = '<svg viewBox="0 0 22 22" aria-hidden="true">' +
+    (TAB_ICONS[slugify(label)] || '<circle cx="11" cy="11" r="3.6"/>') + '</svg>';
+  return icon;
+}
+
 /* ---- Assembly ---- */
 
 // Content sitting under no heading of its own: it stays visible, and a list
@@ -953,6 +1158,7 @@ function buildApp(parts, root) {
     const button = el('button', 'tab');
     button.type = 'button';
     button.setAttribute('role', 'tab');
+    button.appendChild(tabIcon(tab.label));
     button.appendChild(el('span', 'tab-label', tab.label));
     button.addEventListener('click', () => activate(tab));
     tab.button = button;

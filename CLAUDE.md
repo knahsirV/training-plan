@@ -13,7 +13,7 @@ No build step, no tests — it's a static site.
 | `content/plan.md` | H1, Athlete Snapshot, and the current block. Changes weekly. |
 | `content/reference.md` | Coaching Policy, roadmap, zones, session library, mobility. Rarely changes. |
 | `content/log.md` | The adjustment log. Append-only. |
-| `styles/theme.css` | All styling. CSS custom properties at the top control palette/font/width. Content updates never touch this. |
+| `styles/theme.css` | All styling. CSS custom properties at the top control palette/font/width, including the per-discipline hues. Content updates never touch this. |
 | `index.html` / `render.js` | App shell — fetches the three content files and renders one tab per file. Rarely changes. |
 | `manifest.json` / `service-worker.js` | PWA install + offline cache. |
 | `icons/` | `icon-source.png` is the artwork; the shipped PNGs are derived from it. |
@@ -36,22 +36,32 @@ the other two start at `##`.
 
 Keep it **plain markdown** — no HTML, no front matter, no marker comments, no
 nested or ordered lists, no links. `render.js` derives everything (section labels,
-chips, cards, countdown, next long run, today's session) from the `##`/`###` headings
-and tables, and `garmlink` reads and rewrites the files over the GitHub Contents
-API. Anything non-derivable (renamed table, removed section) is just left out of
-the Now tab, not shown stale.
+chips, cards, the Now tab's weekday strip, score rings, volume bar, next long
+run and today's session) from the `##`/`###` headings and tables, and `garmlink`
+reads and rewrites the files over the GitHub Contents API. Anything
+non-derivable (renamed table, removed section) is just left out of the Now tab,
+not shown stale.
 
 Load-bearing shapes, all of which fail silently:
 
 - Progression table: `Week` / `Date` / `Distance`, with `Note` **last** — the
-  race row is found by matching `race` in the Note column.
+  race row is found by matching `race` in the Note column. `Week` also drives the
+  block-week ring, and `Week total` (optional) the volume bar and its week-by-week
+  spark bars; without `Week total` the bar falls back to `Distance`.
 - Weekly template: `Day` / `Session`. Mobility: `Session` / `Duration` / `Focus`.
+  The template is also the Now tab's weekday strip, one cell per row in table
+  order, each coloured by its session's discipline.
 - Dates are `Sep 6` — no year, no weekday, no ISO — in ascending order.
 - Session details are `**Weekday — Title**` paragraphs, colon **outside** the
   bold, followed immediately by a `-` list. A colon inside the bold makes it a
   callout and it disappears from the Now tab.
 - A new discipline needs an entry in `render.js`'s `FAMILIES` / `QUALIFIERS`, or
-  it gets no mobility pairing.
+  it gets no mobility pairing — and, now, no colour: the discipline hues are
+  `--c-<family>` in `theme.css`, bound through a `data-family` attribute, so a new
+  family needs a matching pair of custom properties there too.
+- A day pairing two sessions writes them with an arrow (`Run — Quality →
+  Strength: Upper Body`). The colour comes from what precedes the arrow, so the
+  primary work has to be written first.
 
 **No personal data** — public repo. No birth date, age, height, or body weight.
 FTP, VO2max, threshold HR and zones are fine.
@@ -61,6 +71,12 @@ FTP, VO2max, threshold HR and zones are fine.
 `index.html`, `render.js`, `styles/theme.css` are cached **cache-first** by the
 service worker. After changing any of them, bump `CACHE` in `service-worker.js`
 (`training-plan-v7` → `v8`) or installed apps keep serving the old shell.
+
+The two type faces (Instrument Serif for display, Manrope for everything else)
+come from Google Fonts, so they can't be pre-cached at install — the service
+worker stores them the first time they're fetched instead. Both declare real
+fallbacks, so a first load with no network renders in Georgia and the system
+sans rather than failing.
 Changes under `content/` don't need this — every `content/*.md` is fetched
 network-first.
 
