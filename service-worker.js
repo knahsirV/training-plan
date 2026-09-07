@@ -1,4 +1,4 @@
-const CACHE = 'training-plan-v13';
+const CACHE = 'training-plan-v14';
 
 // Third-party, so their exact URLs aren't known at install time — see the fetch
 // handler, which caches them the first time they are asked for.

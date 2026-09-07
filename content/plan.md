@@ -1,4 +1,4 @@
-# Endurance Training Plan
+# Character Arc
 
 ## Athlete Snapshot
 
