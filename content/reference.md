@@ -70,8 +70,16 @@ Strength here serves two goals at once, and they want different things:
 - **Upper body — hypertrophy, unchanged.** It does not interfere with running, so
   running priorities are no reason to touch it.
 
-Frequency per muscle group barely changes hypertrophy at matched weekly volume,
-so the three-way split is a preference worth keeping rather than a compromise.
+**What the three-way split is for, stated so it stops getting lost.** Each leg
+region gets one heavy exposure a week, on days separated by a running day. Every
+upper muscle group gets two: once on Tuesday's upper session, and once on the leg
+day matching its chain — pressing, front and side delts and biceps on anterior;
+back, rear delts and triceps on posterior. Frequency per muscle group barely
+changes hypertrophy at matched weekly volume, so the second exposure exists to
+split the volume rather than to add it. The failure mode to watch for: if a leg
+day carries no upper work, the split has quietly become one upper day plus two
+leg days, every upper group has dropped to one exposure a week, and the split is
+no longer doing the thing it was built for.
 
 **Sequencing.** Endurance first on any shared day, or at least three hours apart.
 Never heavy lower-body work within eight hours before a quality run.
@@ -98,9 +106,10 @@ the same session would put two different units into one volume sum. Keep it
 fixed: switching mid-block puts a step change in the data that is not training.
 
 Garmin's auto-detection records no exercise names, only a coarse category — a lat
-pulldown logs as PULL_UP, an incline machine press as BENCH_PRESS. Per-exercise
-progression is not trackable unless exercises are set explicitly in the Garmin
-workout. Strength tracking here is session volume only.
+pulldown logs as PULL_UP, an incline machine press as BENCH_PRESS, lateral raises
+and rear delt flyes both as SHOULDER_STABILITY, and tibia raises as CALF_RAISE.
+Per-exercise progression is not trackable unless exercises are set explicitly in
+the Garmin workout. Strength tracking here is session volume only.
 
 ### Injury prevention, in order of evidence
 
@@ -183,21 +192,27 @@ mile). Heart rate is the reliable number here.
 
 **Wednesday — Bike: Easy** — indoor, 40–45min steady Z2 (100–136W), cadence 85–95rpm. Z2 only: adding bike intensity while run volume is ramping is how people break.
 
-**Wednesday — Strength: Anterior Chain** — about 30min, heavy reps of 3–5
+**Wednesday — Strength: Anterior Chain** — about 32min. The squat is heavy at 3–5; the upper work is the second weekly exposure for the anterior groups and stays hypertrophy at 6–12.
 - Back or goblet squat — 4 x 3–5, heavy
+- Machine shoulder press — 2 x 6–10
+- Cable or dumbbell fly — 2 x 8–12
+- Cable lateral raises — 2 x 10–12
+- Preacher or dumbbell curl — 2 x 8–12
 - Kettlebell knee-ups — 2 x 12
 - Tibia raises — 2 x 12
-- Machine shoulder press — 2 x 6–10
 
 **Thursday — Run: Easy** — 30–40min at 145–160bpm. Genuinely easy. Not optional: it is one of the four runs that make the weekly volume.
 
 **Friday — Bike: Easy** — same session as Wednesday. Both bikes are here for the 70.3 and Ironman arc; they are the first thing to drop in a bad week.
 
-**Friday — Strength: Posterior Chain** — about 30min, heavy reps of 3–5
+**Friday — Strength: Posterior Chain** — about 34min. Deadlift and calf raise are heavy at 3–8; the upper work is the second weekly exposure for the posterior groups and stays hypertrophy at 6–12.
 - Romanian deadlift — 4 x 3–5, heavy
+- Lat pulldown — 2 x 8–12
+- T-bar or close grip row — 2 x 8–12
+- Rear delt fly — 2 x 10–12
+- Cable triceps extensions — 2 x 8–12
 - Standing calf raise — 3 x 6–8, heavy
 - Hyperextension or Bulgarian split squat — 2 x 8 per side
-- Box jumps — 1 x 8
 
 **Saturday — Run: Easy/Steady** — 40–60min, mostly 145–160bpm with the option to drift into 161–169 when it feels good. This is the run that took the old plan's bike slot and it is where most of the added weekly volume lives.
 
