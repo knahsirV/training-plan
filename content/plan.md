@@ -2,7 +2,7 @@
 
 ## Athlete Snapshot
 
-- FTP 182W · Run VO2max 52 · Lactate threshold HR 180bpm
+- FTP 182W · Run VO2max 52 · Lactate threshold HR 184bpm
 - Garmin race predictions (Sep 6): 5K 22:36 · 10K 49:41 · Half 1:54:13
 - Longest run this year: 6.02mi (May 28) · Fastest mile: 7:59 at 173bpm
 - Garmin data starts early August 2026 — earlier training was on an Apple Watch, so trends crossing that boundary undercount
@@ -74,7 +74,7 @@ follows. Upper body pairs with the quality run because it never touches the legs
 The two leg days sit Wednesday and Friday with a running day between them, and
 neither lands within eight hours before a hard run.
 
-### Long Run Progression (miles, Easy zone 145–160bpm unless noted)
+### Long Run Progression (miles, Easy zone 156–165bpm unless noted)
 
 | Week | Date | Distance | Week total | Note |
 |---|---|---|---|---|
