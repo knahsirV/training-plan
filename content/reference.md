@@ -139,19 +139,25 @@ has been sessions completed, not hours available.
 
 ## Training Zones
 
-**Run heart rate** (LTHR 180bpm):
+**Run heart rate** — Garmin Connect's own zones, anchored on LTHR 184bpm
+(auto-detected Sep 22, 2026). Garmin's readings are the source of truth here:
 
-| Zone | Range |
-|---|---|
-| Easy / Z2 | 145–160bpm |
-| Steady | 161–169bpm |
-| Tempo | 170–178bpm |
-| Threshold | 179–184bpm |
-| Hard / VO2max | 185bpm+ |
+| Zone | Range | Garmin name | Use |
+|---|---|---|---|
+| Z1 | up to 155bpm | Warm Up | Warm-ups, cooldowns, recovery jogs |
+| Z2 | 156–165bpm | Easy | All easy running and the long run |
+| Z3 | 166–180bpm | Aerobic | Steady and tempo work |
+| Z4 | 181–192bpm | Threshold | Threshold intervals — brackets LTHR |
+| Z5 | above 192bpm | Maximum | Not prescribed |
 
-Easy tops out at 160, not 169. At LTHR 180, 169bpm is 94% of threshold — that is
-tempo wearing an easy label, and it is why the aerobic load balance came out
-inverted. The 161–169 band is real training, it just is not easy training.
+Easy is Garmin's Z2, which tops out at about 90% of threshold. The earlier table
+in this plan was built by hand from a stale LTHR of 180 and never matched Garmin
+Connect. Z3 is real training but not easy training, and Z4 starts at 181, so
+185–192bpm is still threshold rather than VO2max.
+
+Zones are 10–15bpm wide, which is narrower than day-to-day heart rate noise from
+heat, hills, drift, sleep and caffeine. Judge an easy run by its average and its
+time in zone, not by any single reading.
 
 Garmin's threshold *pace* value is a bad reading (it computes to over an hour per
 mile). Heart rate is the reliable number here.
@@ -176,8 +182,8 @@ mile). Heart rate is the reliable number here.
 - If Sunday's long run was hard or the legs are heavy, this is a rest day instead
 
 **Tuesday — Run: Quality** — progresses by phase rather than rotating on a fixed cycle
-- Weeks 1–5, base: 10min warmup then 15–20min continuous at 170–178bpm then 10min cooldown
-- Weeks 6–10, build: 10min warmup then 2 x 10min at 179–184bpm with 3min jog then 10min cooldown; from week 6 replace one rep with 10min at 8:30/mi
+- Weeks 1–5, base: 10min warmup then 15–20min continuous in Z3 (166–180bpm) then 10min cooldown
+- Weeks 6–10, build: 10min warmup then 2 x 10min in Z4 (181–192bpm) with 3min jog then 10min cooldown; from week 6 replace one rep with 10min at 8:30/mi
 - Weeks 11–14, specific: 10min warmup then 3–4 x 1mi at 8:30/mi with 2min jog then 10min cooldown
 
 **Tuesday — Strength: Upper Body** — about 35min, hypertrophy reps of 6–12
@@ -201,7 +207,7 @@ mile). Heart rate is the reliable number here.
 - Kettlebell knee-ups — 2 x 12
 - Tibia raises — 2 x 12
 
-**Thursday — Run: Easy** — 30–40min at 145–160bpm. Genuinely easy. Not optional: it is one of the four runs that make the weekly volume.
+**Thursday — Run: Easy** — 30–40min in Z2 (156–165bpm). Genuinely easy. Not optional: it is one of the four runs that make the weekly volume.
 
 **Friday — Bike: Easy** — same session as Wednesday. Both bikes are here for the 70.3 and Ironman arc; they are the first thing to drop in a bad week.
 
@@ -214,9 +220,9 @@ mile). Heart rate is the reliable number here.
 - Standing calf raise — 3 x 6–8, heavy
 - Hyperextension or Bulgarian split squat — 2 x 8 per side
 
-**Saturday — Run: Easy/Steady** — 40–60min, mostly 145–160bpm with the option to drift into 161–169 when it feels good. This is the run that took the old plan's bike slot and it is where most of the added weekly volume lives.
+**Saturday — Run: Easy/Steady** — 40–60min, mostly Z2 (156–165bpm) with the option to drift into Z3 when it feels good. This is the run that took the old plan's bike slot and it is where most of the added weekly volume lives.
 
-**Sunday — Long Run** — the distance shown on the Now card, all at 145–160bpm
+**Sunday — Long Run** — the distance shown on the Now card, all in Z2 (156–165bpm)
 - Run it continuously. If the heart rate will not hold in the band at that pace, slow down rather than breaking the run up
 - Weeks 1–9: easy throughout
 - Weeks 10–11: finish the last 2mi at 8:30/mi goal pace
