@@ -3,8 +3,8 @@
 ## Athlete Snapshot
 
 - FTP 182W · Run VO2max 52 · Lactate threshold HR 184bpm
-- Garmin race predictions (Sep 6): 5K 22:36 · 10K 49:41 · Half 1:54:13
-- Longest run this year: 6.02mi (May 28) · Fastest mile: 7:59 at 173bpm
+- Garmin race predictions (Oct 11): 5K 22:12 · 10K 48:04 · Half 1:50:15
+- Longest run this year: 9.0mi (Oct 17) · Fastest mile: 7:59 at 173bpm
 - Garmin data starts early August 2026 — earlier training was on an Apple Watch, so trends crossing that boundary undercount
 
 **What this block is built around: weekly running volume.** It is the strongest
@@ -23,11 +23,9 @@ time than the plan it replaces.
 
 ## Current Block: Half Marathon (through Sunday, Dec 13, 2026)
 
-**Goal: 8:30/mi — a 1:51:21 finish, run the whole way.** Garmin's prediction off
-today's fitness is 1:54:13, so this is about three minutes of improvement across
-a full block. Earned, not free, and not fantasy.
+**Goal: 8:30/mi — a 1:51:21 finish, run the whole way.** Garmin's Oct 11 prediction is 1:50:15, about a minute inside the goal, and Oct 13 was 5.0mi at 8:32/mi (average 169bpm). The speed is there. What is not yet there is endurance: the longest run is 9.0mi and running has averaged about 15mi a week against 22 planned. The rest of the block is about turning speed into distance.
 
-- Monday swim → Long Run: Week 1 (5.0mi). Sunday's run slid a day; the swim is skipped this week rather than stacking two sessions today.
+- Week 8 (cutback): Monday's swim slot became a 4.0mi easy run. Sunday Oct 25: long run, 6.0mi.
 
 ### Weekly Template
 
@@ -35,14 +33,13 @@ a full block. Earned, not free, and not fantasy.
 |---|---|
 | Monday | Swim — Technique (easy) |
 | Tuesday | Run — Quality → Strength: Upper Body |
-| Wednesday | Bike — Easy Z2 → Strength: Anterior Chain |
+| Wednesday | Strength: Anterior Chain |
 | Thursday | Run — Easy Zone 2 |
-| Friday | Bike — Easy Z2 → Strength: Posterior Chain |
-| Saturday | Run — Easy/Steady |
+| Friday | Strength: Posterior Chain |
+| Saturday | Run — Easy Zone 2 |
 | Sunday | Long Run |
 
-Four runs, two easy bikes, three strength sessions, one swim. About 8 hours in
-peak week — the top of the budget, so in weeks 12 and 13 drop a bike.
+Four runs, three strength sessions, one swim. The two easy bikes are paused until Dec 14: none has happened since Sep 16, and this plan already ranks them last. Wednesday and Friday become leg-strength days, which have not happened once in the last four weeks (three upper-body sessions, no leg sessions).
 
 **Monday's swim replaces the rest day, and only works if it stays easy.** A
 30-minute technique swim the day after a long run is non-impact and upper-body
@@ -83,10 +80,10 @@ neither lands within eight hours before a hard run.
 | 3 | Sep 20 | 6.6 | 18.3 | |
 | 4 | Sep 27 | 4.6 | 16.3 | cutback week |
 | 5 | Oct 4 | 7.2 | 18.9 | |
-| 6 | Oct 11 | 7.9 | 21.7 | goal-pace segments start in the Tuesday session |
-| 7 | Oct 18 | 8.6 | 22.4 | |
+| 6 | Oct 11 | 7.9 | 21.7 | goal-pace segments start in the Tuesday session. Actual: 11.3mi week, longest run 6.3mi |
+| 7 | Oct 18 | 8.6 | 22.4 | Actual: 16.7mi week, long run 9.0mi (Sat Oct 17) |
 | 8 | Oct 25 | 6.0 | 19.8 | cutback week |
-| 9 | Nov 1 | 9.4 | 23.2 | |
+| 9 | Nov 1 | 9.4 | 23.2 | only if week 8 had all four runs; otherwise repeat week 8 |
 | 10 | Nov 8 | 10.3 | 24.1 | finish the last 2mi at 8:30/mi |
 | 11 | Nov 15 | 7.2 | 22.9 | cutback week |
 | 12 | Nov 22 | 11.3 | 27.0 | finish the last 3mi at 8:30/mi |
