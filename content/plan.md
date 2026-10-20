@@ -25,7 +25,8 @@ time than the plan it replaces.
 
 **Goal: 8:30/mi — a 1:51:21 finish, run the whole way.** Garmin's Oct 11 prediction is 1:50:15, about a minute inside the goal, and Oct 13 was 5.0mi at 8:32/mi (average 169bpm). The speed is there. What is not yet there is endurance: the longest run is 9.0mi and running has averaged about 15mi a week against 22 planned. The rest of the block is about turning speed into distance.
 
-- Week 8 (cutback): Monday's swim slot became a 4.0mi easy run. Sunday Oct 25: long run, 6.0mi.
+- Week 8 (cutback): Monday's swim slot became a 4.0mi easy run. The 5K on Sat Oct 24 replaces that day's easy run; Thursday's run is shortened to 25min with strides and Friday's posterior lift is skipped the day before the race. Sunday Oct 25: long run, 6.0mi, easy.
+- Week 9: Halloween weekend is off, so the long run moves to Fri Oct 30 and that week's posterior lift is dropped.
 
 ### Weekly Template
 
@@ -82,8 +83,8 @@ neither lands within eight hours before a hard run.
 | 5 | Oct 4 | 7.2 | 18.9 | |
 | 6 | Oct 11 | 7.9 | 21.7 | goal-pace segments start in the Tuesday session. Actual: 11.3mi week, longest run 6.3mi |
 | 7 | Oct 18 | 8.6 | 22.4 | Actual: 16.7mi week, long run 9.0mi (Sat Oct 17) |
-| 8 | Oct 25 | 6.0 | 19.8 | cutback week |
-| 9 | Nov 1 | 9.4 | 23.2 | only if week 8 had all four runs; otherwise repeat week 8 |
+| 8 | Oct 25 | 6.0 | 19.8 | cutback week; 5K race Sat Oct 24 |
+| 9 | Oct 30 | 9.4 | 23.2 | Friday, ahead of the Halloween weekend (Sat–Sun off); posterior lift dropped that week. Only if week 8 had all four runs; otherwise repeat week 8 |
 | 10 | Nov 8 | 10.3 | 24.1 | finish the last 2mi at 8:30/mi |
 | 11 | Nov 15 | 7.2 | 22.9 | cutback week |
 | 12 | Nov 22 | 11.3 | 27.0 | finish the last 3mi at 8:30/mi |
