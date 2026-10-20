@@ -196,7 +196,7 @@ mile). Heart rate is the reliable number here.
 - Dumbbell curl — 2 x 8–12
 - Cable triceps extensions — 2 x 8–12
 
-**Wednesday — Bike: Easy** — indoor, 40–45min steady Z2 (100–136W), cadence 85–95rpm. Z2 only: adding bike intensity while run volume is ramping is how people break.
+**Wednesday — Bike: Easy (paused until Dec 14)** — indoor, 40–45min steady Z2 (100–136W), cadence 85–95rpm. Z2 only: adding bike intensity while run volume is ramping is how people break.
 
 **Wednesday — Strength: Anterior Chain** — about 32min. The squat is heavy at 3–5; the upper work is the second weekly exposure for the anterior groups and stays hypertrophy at 6–12.
 - Back or goblet squat — 4 x 3–5, heavy
@@ -207,9 +207,9 @@ mile). Heart rate is the reliable number here.
 - Kettlebell knee-ups — 2 x 12
 - Tibia raises — 2 x 12
 
-**Thursday — Run: Easy** — 30–40min in Z2 (156–165bpm). Genuinely easy. Not optional: it is one of the four runs that make the weekly volume.
+**Thursday — Run: Easy** — 30–40min in Z2 (156–165bpm). Genuinely easy: expect roughly 10:30–11:30/mi at this heart rate (Sep 25: 10:41 at 159bpm; Oct 19: 11:22 at 156bpm). Optional: finish with 4–6 x 20sec relaxed strides. Not optional: it is one of the four runs that make the weekly volume.
 
-**Friday — Bike: Easy** — same session as Wednesday. Both bikes are here for the 70.3 and Ironman arc; they are the first thing to drop in a bad week.
+**Friday — Bike: Easy (paused until Dec 14)** — same session as Wednesday. Both bikes are here for the 70.3 and Ironman arc; they are the first thing to drop in a bad week.
 
 **Friday — Strength: Posterior Chain** — about 34min. Deadlift and calf raise are heavy at 3–8; the upper work is the second weekly exposure for the posterior groups and stays hypertrophy at 6–12.
 - Romanian deadlift — 4 x 3–5, heavy
@@ -220,7 +220,7 @@ mile). Heart rate is the reliable number here.
 - Standing calf raise — 3 x 6–8, heavy
 - Hyperextension or Bulgarian split squat — 2 x 8 per side
 
-**Saturday — Run: Easy/Steady** — 40–60min, mostly Z2 (156–165bpm) with the option to drift into Z3 when it feels good. This is the run that took the old plan's bike slot and it is where most of the added weekly volume lives.
+**Saturday — Run: Easy** — 40–60min in Z2 (156–165bpm), no drifting into Z3 through week 12. Garmin's high-aerobic load is already above its target range (944 against 355–683) and Tuesday covers the middle zone. This is the run that took the old plan's bike slot and it is where most of the added weekly volume lives.
 
 **Sunday — Long Run** — the distance shown on the Now card, all in Z2 (156–165bpm)
 - Run it continuously. If the heart rate will not hold in the band at that pace, slow down rather than breaking the run up
